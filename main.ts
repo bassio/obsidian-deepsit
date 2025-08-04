@@ -98,7 +98,7 @@ export default class DeepSitPlugin extends Plugin {
 		await this.loadSettings();
 
 		this.registerEditorSuggest(new CitationSuggest(this.app, this));
-
+		
 		this.registerView(ReferencesViewType,
 						 (leaf: WorkspaceLeaf) => new ReferencesView(leaf, this)
 						  );

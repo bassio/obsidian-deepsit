@@ -1,11 +1,12 @@
 import * as path from 'path';
 
+
 import { ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon } from 'obsidian';
 
 import BibcitePlugin from 'main';
 
 import {FrontMatterBibliographyString} from "FrontMatter"
-import { exportItems } from 'ZoteroFunctions';
+import { exportItems, exportItemsNonJSON } from 'ZoteroFunctions';
 import { ItemAnnotationsData, CollectionData, processCollection, processAttachmentAnnotations, processCollectionAndCitations, processCollectionAttachmentAnnotations, ItemAnnotationsMap, CollectionAnnotationsMap } from "ReferenceProcessing";
 
 
@@ -26,14 +27,15 @@ export class ReferencesView extends ItemView {
   plugin: BibcitePlugin;
   activeMarkdownLeaf: MarkdownView;
   references: [];
-  fileCollectionData: Map<string, CollectionData>;
+  private _fileCollectionData: Map<string, CollectionData>;
   collectionAnnotationData: CollectionAnnotationsMap;
   loadingSpinnerAsset:string;
+  private _activeViewMode:string
 
   constructor(leaf: WorkspaceLeaf, plugin: BibcitePlugin) {
     super(leaf);
     this.plugin = plugin;
-    this.fileCollectionData = new Map()
+    this._fileCollectionData = new Map()
     this.collectionAnnotationData = new Map()
     this.contentEl.addClass('bibcite-references');
     this.setEmptyView(this.plugin.settings.defaultViewMode == 'bibliography' ? true : false);
@@ -52,10 +54,10 @@ export class ReferencesView extends ItemView {
   }
 
   get activeFileCollectionData():CollectionData | undefined {
-    return this.fileCollectionData.get(this.activeFilePath);
+    return this._fileCollectionData.get(this.activeFilePath);
   }
 
-	get activeViewMode() {
+	get activeViewMode():string {
     return this._activeViewMode;
   }
   set activeViewMode(v:string) {
@@ -109,6 +111,7 @@ export class ReferencesView extends ItemView {
       refreshButton.onclick = async (e) => {
         await this.refreshReferences();
         this.renderBibliography();
+        this.refreshAttachmentsAnnotations();
       }
       modeButton.onclick = (e) => {
         this.renderReferences();
@@ -213,6 +216,13 @@ export class ReferencesView extends ItemView {
     return 'graduation-cap';
   }
 
+  async refresh(){
+
+    await this.refreshReferences();
+    await this.refreshAttachmentsAnnotations();
+
+  }
+
   async refreshReferences() {
 
     let refs;
@@ -241,7 +251,7 @@ export class ReferencesView extends ItemView {
         console.log("refreshed");
         console.log(collectionDataForFile);
 
-        this.fileCollectionData.set(activeFile.path, collectionDataForFile);
+        this._fileCollectionData.set(activeFile.path, collectionDataForFile);
 
         return collectionDataForFile;
 
@@ -255,6 +265,22 @@ export class ReferencesView extends ItemView {
 
 	};
 
+  async exportReferences(format:string='yaml'){
+    const jsonExport = await exportItems(this.activeFileCollectionData?.citations, this.activeFileCollectionData?.library, 'json');    
+
+    const file = this.plugin.app.workspace.getActiveFile();
+
+    if (file){
+      this.plugin.app.fileManager.processFrontMatter(file, (frontmatter) => {
+        frontmatter.references = jsonExport;
+      });
+    }
+  
+    //const mdView = this.app.workspace.getActiveViewOfType(MarkdownView);
+    
+    return jsonExport;
+    
+  }
 
   async processReferences() {
 
@@ -268,7 +294,7 @@ export class ReferencesView extends ItemView {
 
         let collectionDataForFile:CollectionData | undefined
 
-        collectionDataForFile = this.fileCollectionData.get(activeFile.path)
+        collectionDataForFile = this._fileCollectionData.get(activeFile.path)
 
         if (collectionDataForFile){
           console.log("Obtaining collection data from cache.")
@@ -288,7 +314,7 @@ export class ReferencesView extends ItemView {
 
         collectionDataForFile = await processCollectionAndCitations(collectionPath, fileContent);
 
-        this.fileCollectionData.set(activeFile.path, collectionDataForFile)
+        this._fileCollectionData.set(activeFile.path, collectionDataForFile)
 
         return collectionDataForFile;
 
@@ -440,6 +466,23 @@ export class ReferencesView extends ItemView {
     this.setViewContent(containerDiv, !bibliographyMode, true);
     
   };
+
+  async refreshAttachmentsAnnotations():Promise<ItemAnnotationsMap> {
+
+    let itemAnnotations:ItemAnnotationsMap | undefined;
+    
+    const collectionData = this.activeFileCollectionData;
+
+    if (collectionData){
+      itemAnnotations = await processCollectionAttachmentAnnotations(collectionData)
+      this.collectionAnnotationData.set(collectionData.path, itemAnnotations)
+      return itemAnnotations;
+    }
+    else {
+      return new Map() //empty
+    }
+
+  }
 
   async processAttachmentsAnnotations(collectionData:CollectionData):Promise<ItemAnnotationsMap> {
 

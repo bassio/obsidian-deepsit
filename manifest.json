@@ -3,7 +3,7 @@
 	"name": "Deep Sit",
 	"version": "0.1.0",
 	"minAppVersion": "0.15.0",
-	"description": "Powerful research tool for citing and reviewing primary sources through a Zotero integration.",
+	"description": "Focused study and research tool that allows citing and reviewing primary sources through a Zotero integration.",
 	"author": "Ahmed Bassiouni",
 	"authorUrl": "https://github.com/bassio/obsidian-deepsit",
 	"isDesktopOnly": true

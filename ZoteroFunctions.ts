@@ -188,6 +188,28 @@ export async function exportItems(citeKeys:string[], libraryID:string, translato
         
 }
 
+export async function exportItemsNonJSON(citeKeys:string[], libraryID:string, translator:string="yaml") {
+
+    try { 
+        
+        const jsonRpcData = {
+            jsonrpc: "2.0",
+            method: "item.export",
+            params: [citeKeys, translator, libraryID]
+        };
+    
+        let result = await makeJsonRpcHttpRequest(baseOptions, JSON.stringify(jsonRpcData));
+        
+        return result;
+
+    }
+    catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+        
+}
+
 export async function attachments(citeKey:string, library:string) {
     try {
 
