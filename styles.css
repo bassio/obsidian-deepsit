@@ -94,21 +94,21 @@
 }
 
 .annotations-div .item-annotations-header {
-    font-variant: var(--h2-variant);
+    font-variant: var(--h6-variant);
     letter-spacing: -0.015em;
-    line-height: var(--h2-line-height);
-    font-size: var(--h2-size);
-    color: var(--h2-color);
-    font-weight: var(--h2-weight);
-    font-style: var(--h2-style);
-    font-family: var(--h2-font);
+    line-height: var(--h6-line-height);
+    font-size: var(--font-adaptive-smaller);
+    color: var(--h6-color);
+    font-weight: bold;
+    font-style: var(--h6-style);
+    font-family: var(--h6-font);
     margin-block-start: var(--p-spacing);
 }
 .annotations-div .item-annotations-header-item-title{
     font-variant: var(--h6-variant);
     letter-spacing: 0.015em;
-    font-size: var(--h6-size);
-    line-height: var(--h6-line-height);
+    font-size: var(--font-adaptive-small);
+    /* line-height: var(--h6-line-height); */
     color: var(--h6-color);
     font-weight: var(--h6-weight);
     font-style: var(--h6-style);
@@ -124,7 +124,7 @@
 **/
 
 .annotations-div .annotation-highlight {
-    font-size: var(--font-ui-small);
+    font-size: var(--font-ui-smaller);
 }
 
 .annotations-div .annotation-link-icon,
