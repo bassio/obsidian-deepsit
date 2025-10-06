@@ -5,6 +5,6 @@
 	"minAppVersion": "0.15.0",
 	"description": "Focused study and research tool that allows citing and reviewing primary sources through a Zotero integration.",
 	"author": "Ahmed Bassiouni",
-	"authorUrl": "https://github.com/bassio/obsidian-deepsit",
+	"authorUrl": "https://github.com/bassio",
 	"isDesktopOnly": true
 }
