@@ -91,8 +91,6 @@ export default class DeepSitPlugin extends Plugin {
 
 	async onload() {
 
-		console.log("Loading Deep Sit plugin.")
-
 		await this.loadSettings();
 
 		this.registerEditorSuggest(new CitationSuggest(this.app, this));

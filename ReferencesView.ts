@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 
-import { ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon } from 'obsidian';
+import { ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath, TFile } from 'obsidian';
 
 import BibcitePlugin from 'main';
 
@@ -35,11 +35,14 @@ export class ReferencesView extends ItemView {
     this.addAction("refresh-cw", "Refresh References", () => {
       this.refreshReferences();
     })
-
-    const adapter = this.plugin.app.vault.adapter;
-    const assetPath = "spinner.svg";
-    this.loadingSpinnerAsset = adapter.getResourcePath(path.join(this.plugin.app.vault.configDir, "plugins", this.plugin.manifest.id, assetPath));
-
+    
+    const vault = this.plugin.app.vault;
+    const adapter = vault.adapter;
+    const assetFileName = "spinner.svg";
+    const assetPath = normalizePath(path.join(this.plugin.manifest.dir, assetFileName));
+    
+    this.loadingSpinnerAsset = adapter.getResourcePath(assetPath);
+    
   }
 
   get activeFilePath():string {
