@@ -15,13 +15,6 @@ export const ReferencesViewType = 'ReferencesView';
 
 const fs = require('fs');
 
-/** 
- * interface ReferencesViewPersistedState {
- * zotero_collection: string;
- * libraryName: string;
- * citations: string[]
- * }
- */
 
 export class ReferencesView extends ItemView {
   plugin: BibcitePlugin;
@@ -272,9 +265,7 @@ export class ReferencesView extends ItemView {
         frontmatter.references = jsonExport;
       });
     }
-  
-    //const mdView = this.app.workspace.getActiveViewOfType(MarkdownView);
-    
+
     return jsonExport;
     
   }
