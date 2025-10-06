@@ -72,3 +72,7 @@ This plugin's would fit optimally within your research workflow, if you operate 
 
 ## Usage
 
+
+## Acknowledgements
+
+- SVG only spinner obtained from https://github.com/n3r4zzurr0/svg-spinners (MIT © Utkarsh Verma)
