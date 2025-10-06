@@ -73,6 +73,18 @@ This plugin's would fit optimally within your research workflow, if you operate 
 ## Usage
 
 
+## Disclosures
+
+As of October 2025, this plugin does *not* contain:
+- [x] payments
+- [x] account requirements
+- [x] network use
+- [x] external file access
+- [x] ads
+- [x] telemetry with privacy policy
+- [x] closed source code
+
 ## Acknowledgements
 
 - SVG only spinner obtained from https://github.com/n3r4zzurr0/svg-spinners (MIT © Utkarsh Verma)
+
