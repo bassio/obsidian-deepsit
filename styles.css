@@ -104,11 +104,11 @@
     font-family: var(--h6-font);
     margin-block-start: var(--p-spacing);
 }
+
 .annotations-div .item-annotations-header-item-title{
     font-variant: var(--h6-variant);
     letter-spacing: 0.015em;
     font-size: var(--font-adaptive-small);
-    /* line-height: var(--h6-line-height); */
     color: var(--h6-color);
     font-weight: var(--h6-weight);
     font-style: var(--h6-style);
@@ -116,12 +116,6 @@
     margin-block-end: var(--p-spacing);    
 }
 
-/**
-.annotations-div .annotation-div {
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-**/
 
 .annotations-div .annotation-highlight {
     font-size: var(--font-ui-smaller);

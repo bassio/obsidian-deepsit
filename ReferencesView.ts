@@ -62,7 +62,7 @@ export class ReferencesView extends ItemView {
     const mode = bibliographyMode ? 'Bibliography' : 'References' 
     const oppositeMode = bibliographyMode ? 'References' : 'Bibliography'
     
-    var headerText;
+    let headerText;
 
     if (!annotationsView){
       headerText = header.createEl("span", { text: mode, cls: "references-header-text" });
@@ -489,8 +489,8 @@ export class ReferencesView extends ItemView {
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('references-div');
 
-    var referenceEntries;
-    var bibliographyMode;
+    let referenceEntries;
+    let bibliographyMode;
 
     if (bibliographyModeString == 'references'){
       referenceEntries = collectionData.citations;

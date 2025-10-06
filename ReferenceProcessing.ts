@@ -71,7 +71,7 @@ export async function processCollectionAndCitations(collectionPath:string, fileT
 
         let matches = fileTextContent.match(re)
 
-        var matches_unique;
+        let matches_unique;
         
         if (matches){
             const matchesFiltered = matches
