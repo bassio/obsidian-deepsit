@@ -248,9 +248,6 @@ export class ReferencesView extends ItemView {
 
         collectionDataForFile = await processCollectionAndCitations(collectionPath, fileContent);
 
-        console.log("refreshed");
-        console.log(collectionDataForFile);
-
         this._fileCollectionData.set(activeFile.path, collectionDataForFile);
 
         return collectionDataForFile;
@@ -297,7 +294,6 @@ export class ReferencesView extends ItemView {
         collectionDataForFile = this._fileCollectionData.get(activeFile.path)
 
         if (collectionDataForFile){
-          console.log("Obtaining collection data from cache.")
           return collectionDataForFile;
         }
 
@@ -337,8 +333,6 @@ export class ReferencesView extends ItemView {
     this.setLoadingView();
 
     const refs = await this.processReferences();
-
-    console.log(refs);
     
     if (!refs.citations || refs.citations.length ==0){
       if ('error' in refs) {

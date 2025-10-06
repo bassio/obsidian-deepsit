@@ -73,10 +73,8 @@ export default class DeepSitPlugin extends Plugin {
     set activeFilePath(path) {
         if (path != this._activeFilePath){
 			this._activeFilePath = path;
-			console.log("activeFilePath changed!");
 
 			if (!path){
-				console.log("empty path");
 				this.view?.setEmptyView();
 				return;
 			}
@@ -114,8 +112,6 @@ export default class DeepSitPlugin extends Plugin {
 
 		this.registerEvent(this.app.workspace.on('active-leaf-change', (leaf:WorkspaceLeaf) => {
 			const activeFile = this.app.workspace.getActiveFile();
-			console.log(activeFile);
-			console.log(leaf)
 			if (!activeFile){
 				this.activeFilePath = "";
 			} else {
@@ -125,7 +121,6 @@ export default class DeepSitPlugin extends Plugin {
 		
 		this.registerEvent(this.app.workspace.on('layout-change', (leaf:WorkspaceLeaf) => {
 			const activeFile = this.app.workspace.getActiveFile();
-			console.log("layout change");
 			if (!activeFile){
 				this.activeFilePath = "";
 			} else if (activeFile.path != this.activeFilePath) {
