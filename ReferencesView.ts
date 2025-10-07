@@ -1,5 +1,5 @@
-import * as path from 'path';
 
+const fs = require('fs');
 
 import { ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath, TFile } from 'obsidian';
 
@@ -12,8 +12,6 @@ import { ItemAnnotationsData, CollectionData, processCollection, processAttachme
 
 export const ReferencesViewType = 'ReferencesView';
 
-
-const fs = require('fs');
 
 
 export class ReferencesView extends ItemView {
@@ -39,6 +37,8 @@ export class ReferencesView extends ItemView {
     const vault = this.plugin.app.vault;
     const adapter = vault.adapter;
     const assetFileName = "spinner.svg";
+
+    const path = require('path')
     const assetPath = normalizePath(path.join(this.plugin.manifest.dir, assetFileName));
     
     this.loadingSpinnerAsset = adapter.getResourcePath(assetPath);
@@ -369,14 +369,17 @@ export class ReferencesView extends ItemView {
                     <div class="reference-title"><a data-citekey="${itemData['id']}" href='#0'>${itemData['title']}</a></div>
                     <div class="reference-journal">${journal} ${issueDate}</div>
                   </div>`;
-
+      
     }
   
-  containerDiv.innerHTML += itemsDiv;
+    const itemsDivNode = new DOMParser().parseFromString(itemsDiv, 'text/html');
+    Array.from(itemsDivNode.body.children).forEach(element => {
+      containerDiv.appendChild(element);
+    });  
 
-  this.setViewContent(containerDiv, false); // bibliographyMode=false
+    this.setViewContent(containerDiv, false); // bibliographyMode=false
 
-  this.renderAttachments(refs, 'references');
+    this.renderAttachments(refs, 'references');
 
   };
 
@@ -430,8 +433,10 @@ export class ReferencesView extends ItemView {
 
     }
   
-    containerDiv.innerHTML += itemsDiv;
-
+    const itemsDivNode = new DOMParser().parseFromString(itemsDiv, 'text/html');
+    Array.from(itemsDivNode.body.children).forEach(element => {
+      containerDiv.appendChild(element);
+    });
 
     this.setViewContent(containerDiv, true); // bibliographyMode=true
 
@@ -626,7 +631,6 @@ export class AnnotationsModal extends Modal {
       linkButton.href = annotationUri;
       setIcon(linkButton, "external-link");
       
-
     }
   }
 }
