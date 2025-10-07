@@ -28,7 +28,7 @@ class DeepSitSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', { text: 'Deep Sit Plugin Settings' });
+		new Setting(containerEl).setName('Deep Sit Settings').setHeading();
 
 		new Setting(containerEl)
 			.setName('Default Reference List View Mode')
