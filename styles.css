@@ -134,6 +134,7 @@
 
 .annotations-div .annotation-link-icon,
 .annotations-div .annotation-copy-icon  {
+    --icon-size: var(--icon-xs);
     color: var(--text-normal);
     padding-left: var(--icon-xs-stroke-width);
     padding-right: var(--icon-xs-stroke-width);

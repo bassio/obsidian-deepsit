@@ -1,7 +1,7 @@
 
 const fs = require('fs');
 
-import { ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath, TFile } from 'obsidian';
+import { App, ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath, TFile } from 'obsidian';
 
 import BibcitePlugin from 'main';
 
@@ -645,7 +645,7 @@ export class MultiAnnotationsModal extends Modal {
 
   constructor(app: App, private annotationData: ItemAnnotationsData[]) {
     super(app);
-    this._data = annotationData.filter((item) => item.annotations.length); //only these that have annotations
+    this._data = annotationData.filter((item:ItemAnnotationsData) => item.annotations.length); //only these that have annotations
   }
 
   onOpen() {

@@ -8,10 +8,35 @@ export interface Reference {
     library: string;
 }
 
+export interface Attachment {
+    open: string;
+    path: string | boolean;
+    annotations?: Annotation[];
+}
+
+export interface Annotation {
+    annotationAuthorName: string;
+    annotationColor: string; //example "#ffd400"
+    annotationComment: string
+    // annotationPageLabel: string; // "5"
+    // //annotationPosition : // example {pageIndex: 4, rects: Array(4)}
+    // //annotationSortIndex: string
+    annotationText: string;
+    annotationType: string // example "highlight"
+    dateAdded: string  // example "2025-03-08T23:41:05Z"
+    dateModified: string // example"2025-03-08T23:41:05Z"
+    itemType: string // "annotation"
+    key: string;
+    parentItem: string; 
+    //relations: 
+    //tags: string[]
+    //version: integer // example 60687
+}
+
 export interface ItemAnnotationsData {
     reference: Reference;
     parentUri: string;
-    annotations: Object;
+    annotations: Object[];
     itemData: Object;
 }
 
@@ -112,10 +137,8 @@ export async function processAttachmentAnnotations(collectionData:CollectionData
         
       const itemData = collectionData.data.get(item);
 
-      const itemAttachmentsAll = await attachments(item, collectionData.library)
-      
-      //const itemAttachmentsAll = itemData['attachments']
-      
+      const itemAttachmentsAll:Attachment[] = await attachments(item, collectionData.library)
+            
       const itemAttachmentsWithPath = itemAttachmentsAll.filter(attach => attach.path != false)
 
       if (itemAttachmentsWithPath.length){
@@ -158,7 +181,7 @@ export async function processCollectionAttachmentAnnotations(collectionData:Coll
         
       const itemData = collectionData.data.get(item);
 
-      const itemAttachmentsAll = await attachments(item, collectionData.library)
+      const itemAttachmentsAll:Attachment[] = await attachments(item, collectionData.library)
             
       const itemAttachmentsWithPath = itemAttachmentsAll.filter(attach => attach.path != false)
 

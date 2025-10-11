@@ -92,7 +92,7 @@ export class CitationSuggest extends EditorSuggest<Suggestion> {
 		};
 
 		const noteFile = file;
-		const frontMatter = this.app.metadataCache.getFileCache(noteFile).frontmatter;
+		const frontMatter = this.app.metadataCache.getFileCache(noteFile)?.frontmatter;
 
 		if (frontMatter){
 
