@@ -605,8 +605,12 @@ export class AnnotationsModal extends Modal {
 
     if (annotation['annotationType'] == 'highlight'){
       const annotationSpan = annotationDiv.createEl("span", {text: annotation.annotationText});
+
       annotationSpan.title = annotation['annotationComment'] //tooltip
-      annotationSpan.style = `background-color: ${annotation['annotationColor']}`;
+
+      const highlightColour = `${annotation['annotationColor']}`.slice(1); //remove the initial '#' in the hex colour
+      annotationSpan.className = `highlight-${highlightColour}`;
+
       const annotationUri = this._parentUri + `?annotation=${annotation['key']}`
       let linkButton = annotationDiv.createEl("a", {cls: "annotation-link-icon", title: "Open in Zotero"});
       linkButton.href = annotationUri;
