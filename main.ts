@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, WorkspaceLeaf } from 'obsidian';
+import { App, Editor, MarkdownView, Menu, Modal, Notice, Plugin, PluginSettingTab, Setting, WorkspaceLeaf } from 'obsidian';
 
 import { CitationSuggest } from "CitationSuggest";
 import { ReferencesView, ReferencesViewType } from 'ReferencesView';
@@ -11,7 +11,7 @@ interface DeepSitPluginSettings {
 
 const DEFAULT_SETTINGS:DeepSitPluginSettings = {
 	defaultViewMode: 'references',
-	defaultAnnotationsMode: 'modal'
+	defaultAnnotationsMode: 'viewpane'
 }
 
 
@@ -49,8 +49,8 @@ class DeepSitSettingTab extends PluginSettingTab {
 			.setDesc('The default view mode for the Annotations. Options include "Modal" (default) and "View Pane".')
 			.addDropdown((dropdown) => {
 				dropdown
-				.addOption('modal', "Modal")
 				.addOption('viewpane', 'View Pane')
+				.addOption('modal', "Modal")
 				.setValue(this.plugin.settings.defaultAnnotationsMode)
 				.onChange(async (value) => {
 							this.plugin.settings.defaultAnnotationsMode = value;
@@ -125,7 +125,34 @@ export default class DeepSitPlugin extends Plugin {
 				this.activeFilePath = activeFile.path;
 			}
 		}));
-			  
+		g
+		this.registerEvent(this.app.workspace.on('editor-menu', (menu, editor) => {
+			menu.addItem(item => {
+							item.setTitle('Referencing');
+							item.setIcon('graduation-cap');
+
+							const submenu = item.setSubmenu();
+
+							submenu.addItem(subitem => {
+								subitem.setTitle('Insert Citation')
+								.setIcon('brackets')
+								.onClick(() => {
+									editor.replaceSelection(`[@]`);
+									const currentCursor = editor.getCursor()
+									editor.setCursor({line: currentCursor.line, ch: currentCursor.ch - 1});
+								});
+							});
+
+							submenu.addItem(subitem => {
+								subitem.setTitle('Insert References')
+								.setIcon('library-big')
+								.onClick(() => editor.replaceSelection(`::: {#refs}\n:::\n`));
+							});
+
+						});
+						
+		}));
+
 		this.addSettingTab(new DeepSitSettingTab(this.app, this));
 
 		this.app.workspace.onLayoutReady(async () => {
@@ -164,10 +191,11 @@ export default class DeepSitPlugin extends Plugin {
 
 	}
 
-	revealLeaf() {
+	async revealLeaf() {
 		const leaves = this.app.workspace.getLeavesOfType(ReferencesViewType);
 		if (!leaves?.length) return;
-		this.app.workspace.revealLeaf(leaves[0]);
+		await this.app.workspace.revealLeaf(leaves[0]);
 	}
 
 }
+

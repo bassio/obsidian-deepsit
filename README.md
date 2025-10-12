@@ -1,6 +1,5 @@
 # Deep Sit plugin for Obsidian
 
-
 ## Deep Sit
 
 Deep Sit is an Obsidian plugin that allows you to easily cite and refer to the literature stored in your Reference Manager Library (Zotero) during your note-taking. This integration enhances the use of Obsidian as a focused study and research tool.
@@ -11,11 +10,27 @@ Deep Sit is an Obsidian plugin that allows you to easily cite and refer to the l
 - Zotero's Better BibTeX plugin. (https://retorque.re/zotero-better-bibtex/index.html)
 - Note: Zotero, with Better BibTeX installed, must be running while you are using this plugin.
 
-## Manually installing the plugin
+## Installation
 
-    (Instructions from https://github.com/obsidianmd/obsidian-sample-plugin)
-    
-    Copy over main.js, styles.css, manifest.json to your vault VaultFolder/.obsidian/plugins/your-plugin-id/.
+### Manual installation
+
+- Go to the Releases page of the plugin https://github.com/bassio/obsidian-deepsit/releases and choose a release to download.
+- Download main.js, styles.css, manifest.json files from the "Assets" of the release.
+- Open your vault's plugins folder (VaultFolder/.obsidian/plugins) and create a new folder there named obsidian-deepsit.
+- Copy over main.js, styles.css, manifest.json to the newly-created folder "VaultFolder/.obsidian/plugins/obsidien-deepsit/".
+
+### BRAT
+
+- Another option for installation is to trial the the Beta Reviewers Auto-update Tester (BRAT) plugin (https://github.com/TfTHacker/obsidian42-brat), which is available through the Obsidian Community plugins and enable it.
+- Go to the BRAT plugin settings and select the Add beta plugin button.
+- Add Deep Sit via pasting its repository link: https://github.com/bassio/obsidian-deepsit and click the Add Plugin button.
+
+### Installation through Obsidian's official Community plugins channel (Pending review)
+
+Deep Sit has been submitted to the Community plugins as of 6th of October 2025 and is awaiting review.
+
+Pull request: https://github.com/obsidianmd/obsidian-releases/pull/8050
+
 
 ## Use case
 
@@ -69,9 +84,16 @@ This plugin's would fit optimally within your research workflow, if you operate 
 
 ![Annotations](/screenshots/annotations.png)
 
-
 ## Usage
 
+- Once the plugin is installed and enabled, an icon (a graduation cap icon) will appear on the right sided leaf (sidebar) in Obsidian's workspace.
+- Clicking on the icon will bring Deep Sit's references into view in the right sidebar.
+- To start citing references from your Zotero in an Obsidian note, add to the note's YAML frontmatter (also called in Obsidian note "Properties") a property called **bib**, and enter the path to the Zotero collection you want to be referencing as the underlying bibliography for this note.
+    - The path to the Zotero collection should include the name of the Zotero library first, then use forward slashes for every subcollection. For example: *My Library*/My Papers/paper1.
+- Please make sure that Zotero is running with the Better Bibtex plugin activated for active communication with the Obsidian Deep Sit plugin.
+- Click the refresh button in Deep Sit's View to refresh the note's bibliography.
+- Cite while you write, using the "[@citekey]" pandoc citation syntax, and an autocomplete pop-up should appear to help you choose your reference, based on the item's *Citation key* in Zotero. (Refer to Zotero Better Bibtex documentation if you are not sure what is an item's citekey is.)
+- Click the refresh button to refresh the reference list in Deep Sit's View.
 
 ## Disclosures
 
@@ -86,5 +108,5 @@ As of October 2025, this plugin does *not* contain:
 
 ## Acknowledgements
 
-- SVG only spinner obtained from https://github.com/n3r4zzurr0/svg-spinners (MIT © Utkarsh Verma)
-
+- Emiliano Heyns for the excellent Zotero Better BibTeX plugin. (https://retorque.re/zotero-better-bibtex/index.html)
+- SVG only spinner obtained from https://github.com/n3r4zzurr0/svg-spinners (MIT © Utkarsh Verma).

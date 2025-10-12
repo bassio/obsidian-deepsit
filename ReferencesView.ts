@@ -1,7 +1,7 @@
 
 const fs = require('fs');
 
-import { App, ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath, TFile } from 'obsidian';
+import { App, ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath, TFile, TAbstractFile } from 'obsidian';
 
 import BibcitePlugin from 'main';
 
@@ -258,7 +258,7 @@ export class ReferencesView extends ItemView {
 
 	};
 
-  async exportReferences(format:string='yaml'){
+  async exportReferences(format:string='json'){
     const jsonExport = await exportItems(this.activeFileCollectionData?.citations, this.activeFileCollectionData?.library, 'json');    
 
     const file = this.plugin.app.workspace.getActiveFile();
@@ -270,6 +270,34 @@ export class ReferencesView extends ItemView {
     }
 
     return jsonExport;
+    
+  }
+
+  async exportBibliography(format:string='bibtex'){
+    const bibExport = await exportItemsNonJSON(this.activeFileCollectionData?.bibliography, this.activeFileCollectionData?.library, format);    
+
+    const file = this.plugin.app.workspace.getActiveFile();
+
+    if (file){
+      const path = require('path')
+
+      const bibtexPath:string = normalizePath(path.join(file.parent?.path, `${file.basename}.bibtex`))
+
+      const bibtexFile = this.plugin.app.vault.getAbstractFileByPath(bibtexPath);
+
+      if (bibtexFile){
+        this.plugin.app.fileManager.trashFile(bibtexFile); //delete existing bibtex file first if present
+      }
+
+      this.plugin.app.vault.create(bibtexPath, bibExport);
+
+      this.plugin.app.fileManager.processFrontMatter(file, (frontmatter) => {
+        frontmatter['bibliography'] = `${file.basename}.bibtex`;
+      });
+
+    }
+
+    return bibExport;
     
   }
 
