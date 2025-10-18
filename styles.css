@@ -191,3 +191,10 @@
 .annotations-div .highlight-aaaaaa {
     background-color: var(--highlight-gray);
 }
+
+div.references-widget {
+    font-size: var(--font-ui-small);
+    color: var(--text-muted);
+    padding: var(--embed-padding);
+    border-inline-start: var(--embed-border-start)
+}

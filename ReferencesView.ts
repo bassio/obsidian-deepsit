@@ -6,7 +6,7 @@ import { App, ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, nor
 import BibcitePlugin from 'main';
 
 import {FrontMatterBibliographyString} from "FrontMatter"
-import { exportItems, exportItemsNonJSON } from 'ZoteroFunctions';
+import { bibliography, exportItems, exportItemsNonJSON, pandocFilter } from 'ZoteroFunctions';
 import { ItemAnnotationsData, CollectionData, processCollection, processAttachmentAnnotations, processCollectionAndCitations, processCollectionAttachmentAnnotations, ItemAnnotationsMap, CollectionAnnotationsMap } from "ReferenceProcessing";
 
 
@@ -300,6 +300,11 @@ export class ReferencesView extends ItemView {
     return bibExport;
     
   }
+
+  async generateBibliography(citeKeys:string[], library:string='', style:string, contentType:string='text', quickCopy:boolean=false) {
+    return bibliography(citeKeys, library, style, contentType, quickCopy);
+  }
+  
 
   async processReferences() {
 

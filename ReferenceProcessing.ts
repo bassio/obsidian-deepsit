@@ -80,6 +80,36 @@ export async function processCollection(collectionPath:string):Promise<Collectio
 
 };
 
+export function citationsInText(textString:string):string[] {
+
+    try {
+        
+        const re = /\[(@[a-zA-Z0-9_-]+[ ]*;?[ ]*)+\]/g
+
+        let matches = textString.match(re)
+
+        let matches_unique;
+        
+        if (matches){
+            const matchesParsed = matches
+                        .map(item => item.slice(1, -1).split(";").map( i => i.trim().replace("@", "") ))
+                        .flat(1);
+
+            matchesUnique = new Set(matchesParsed);
+
+            return [...matchesUnique];
+
+        } else {
+            return [];
+        }
+
+    } catch (e) {
+        console.error(e);
+        return []
+    }
+
+}
+
 export async function processCollectionAndCitations(collectionPath:string, fileTextContent:string):Promise<CollectionData>  {
 
     let refData:CollectionData = {'library': null, 'citations': [], 'bibliography': [], 'data': []};

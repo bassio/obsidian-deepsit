@@ -32,6 +32,7 @@ async function makeJsonRpcHttpRequest(options:typeof baseOptions, dataStr:string
     };
 }
 
+
 async function makeHttpRequest(options, data) {
     const body = {'body': data}
     const requestOptions = Object.assign({ ...options }, body)
@@ -140,13 +141,20 @@ export async function exportCollection(collectionId:string, libraryId:string, bi
 
 }
 
-export async function bibliography(citeKeys:string[], format:string) {
+export async function bibliography(citeKeys:string[], library:string='', style:string, contentType:string='text', quickCopy:boolean=false) {
     try { 
         
+        const format = {
+                        contentType: contentType, // can be 'html'
+                        locale: '',
+                        id: style,
+                        quickCopy: quickCopy,
+                        }
+
         const jsonRpcData = {
             jsonrpc: "2.0",
             method: "item.bibliography",
-            params: [citeKeys, format]
+            params: [citeKeys, format, library]
         };
 
         const result = await makeJsonRpcHttpRequest(baseOptions, JSON.stringify(jsonRpcData));
@@ -159,6 +167,7 @@ export async function bibliography(citeKeys:string[], format:string) {
     }
 
 }
+
 
 export async function exportItems(citeKeys:string[], libraryID:string, translator:string="json") {
 
@@ -229,6 +238,27 @@ export async function attachments(citeKey:string, library:string) {
     }
 
 }
+
+export async function pandocFilter(citekeys:string[], asCSL:boolean, libraryID:string, style, locale){
+
+    try {
+
+        const jsonRpcData = {
+            jsonrpc: "2.0",
+            method: "item.pandoc_filter",
+            params: [citekeys, asCSL, libraryID, style]
+        };
+
+        const result = await makeJsonRpcHttpRequest(baseOptions, JSON.stringify(jsonRpcData));
+
+        return result;
+	
+    } catch (error) {
+        throw error;
+    }
+
+}
+
 
 export async function exportCollectionPath(collectionPath:string, bibFormat = 'betterbibtex') {
     try {

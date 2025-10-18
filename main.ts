@@ -1,8 +1,9 @@
-import { App, Editor, MarkdownView, Menu, Modal, Notice, Plugin, PluginSettingTab, Setting, WorkspaceLeaf } from 'obsidian';
+import { App, Editor, MarkdownView, Menu, Modal, Notice, Plugin, PluginSettingTab, requireApiVersion, Setting, WorkspaceLeaf } from 'obsidian';
 
 import { CitationSuggest } from "CitationSuggest";
 import { ReferencesView, ReferencesViewType } from 'ReferencesView';
-
+import { FrontMatterBibliographyString } from 'FrontMatter';
+import {ReferencesRendererViewPlugin, ReferencesStateField} from 'EditorExtensions'
 
 interface DeepSitPluginSettings {
 	defaultViewMode: string;
@@ -125,7 +126,7 @@ export default class DeepSitPlugin extends Plugin {
 				this.activeFilePath = activeFile.path;
 			}
 		}));
-		g
+		
 		this.registerEvent(this.app.workspace.on('editor-menu', (menu, editor) => {
 			menu.addItem(item => {
 							item.setTitle('Referencing');
@@ -153,10 +154,47 @@ export default class DeepSitPlugin extends Plugin {
 						
 		}));
 
+		this.registerEditorExtension([ReferencesStateField, ReferencesRendererViewPlugin]);
+
+		this.registerMarkdownPostProcessor(async (element, context) => {
+			
+			if (element.className == 'el-p'){
+				
+				if (element.textContent == `::: {#refs}\n:::`){
+
+					let leaves = this.app.workspace.getLeavesOfType('ReferencesView');
+
+					for (let leaf of leaves) {
+						if (requireApiVersion('1.7.2')) {
+							await leaf.loadIfDeferred(); // Ensure view is fully loaded
+						}
+						// perform modifications here...
+						if (leaf.view instanceof ReferencesView) {
+							let view = leaf.view; // You now have your CustomView
+							const refs = await view.processReferences();
+							const library = context.frontmatter[FrontMatterBibliographyString].split('/', 1)[0];
+							const bib:string = await view.generateBibliography(refs.citations, library, 'vancouver', 'text')
+							element.textContent = bib.replace('\n', '<br>');
+						}
+
+					}
+					
+				}
+			}
+
+    	});
+
+
 		this.addSettingTab(new DeepSitSettingTab(this.app, this));
 
 		this.app.workspace.onLayoutReady(async () => {
 			await this.initLeaf();
+			/*
+			const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+			const editor = view.editor;
+			editor.cm.view.dispatch({changes: [
+    			{ from: 0, insert: `` }]});
+			*/
 		});
 
 	}
