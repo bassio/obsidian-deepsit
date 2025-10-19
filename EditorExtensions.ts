@@ -57,6 +57,10 @@ class ReferencesWidget extends WidgetType {
     return other.data == this.data;
   }
 
+  destroy(dom: HTMLElement){
+    dom.remove();
+  }
+
   toDOM(view) {
     
     if (this.data == EmptyReferencesDisplayData) {
@@ -87,24 +91,41 @@ export const ReferencesStateField = StateField.define<DecorationSet>({
   update: (currentValue:DecorationSet, transaction:Transaction) => {
 
     const isSourceMode = !transaction.state.field(editorLivePreviewField);
+
     // No decorations if we're in source mode.
     if (isSourceMode) return Decoration.none;
 
     for (let effect of transaction.effects) {
+      
       if (effect.is(asyncReferencesDisplayDataEffect)) {
-
+        
+        console.log(effect.value);
+        
         const builder = new RangeSetBuilder<Decoration>();
+        
+        const prevStateField = transaction.startState.field(ReferencesStateField);
 
-        builder.add(
-            effect.value.posFrom,
-            effect.value.posTo,
-            Decoration.replace({
-                widget: new ReferencesWidget(effect.value),
-                block: true
-            })
-        )
+        if (effect.value == EmptyReferencesDisplayData){
 
-        return builder.finish();
+          console.log("Empty");
+
+          return Decoration.none
+          
+        } else {
+          
+          builder.add(
+              effect.value.posFrom,
+              effect.value.posTo,
+              Decoration.replace({
+                  widget: new ReferencesWidget(effect.value),
+                  block: true
+              })
+          )
+
+          return builder.finish();
+
+        }
+
       }
 
     }
@@ -113,7 +134,9 @@ export const ReferencesStateField = StateField.define<DecorationSet>({
 
   },
   provide(field: StateField<DecorationSet>): Extension {
-    return EditorView.decorations.from(field);
+    //return EditorView.decorations.from(field);
+    return [EditorView.atomicRanges.of(view => view.state.field(field)),
+            EditorView.decorations.from(field)]
   },
 
 });
@@ -130,8 +153,6 @@ class ReferencesRendererPlugin implements PluginValue {
 
     if (update.docChanged) {
 
-        const stateFieldValue = update.state.field(ReferencesStateField);
-
         const doc = update.state.doc;
 
         const currentDocText = doc.toString();
@@ -139,7 +160,12 @@ class ReferencesRendererPlugin implements PluginValue {
         const refIndex =  currentDocText.indexOf(`::: {#refs}\n:::`);
         
         if (refIndex === -1){
-            return;
+          //hack using setTimeout avoids the "Calls to EditorView.update are not allowed while an update is in progress"
+          setTimeout(() => {
+            update.view.dispatch({effects: asyncReferencesDisplayDataEffect.of(EmptyReferencesDisplayData),});
+          }, 50);
+          
+          return
         }
 
         const fmInfo:FrontMatterInfo = getFrontMatterInfo(currentDocText);
