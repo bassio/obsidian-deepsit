@@ -98,16 +98,12 @@ export const ReferencesStateField = StateField.define<DecorationSet>({
     for (let effect of transaction.effects) {
       
       if (effect.is(asyncReferencesDisplayDataEffect)) {
-        
-        console.log(effect.value);
-        
+                
         const builder = new RangeSetBuilder<Decoration>();
         
         const prevStateField = transaction.startState.field(ReferencesStateField);
 
         if (effect.value == EmptyReferencesDisplayData){
-
-          console.log("Empty");
 
           return Decoration.none
           
