@@ -16,8 +16,10 @@ import {
   ViewUpdate,
   WidgetType,
 } from '@codemirror/view';
+import { SearchCursor } from '@codemirror/search';
+
 import { FrontMatterBibliographyString } from 'FrontMatter';
-import { editorEditorField, editorLivePreviewField, getFrontMatterInfo, FrontMatterInfo, parseFrontMatterEntry } from 'obsidian';
+import { editorEditorField, editorLivePreviewField, getFrontMatterInfo, FrontMatterInfo, parseYaml } from 'obsidian';
 import { citationsInText } from 'ReferenceProcessing';
 import { bibliography, bibliographySync } from 'ZoteroFunctions';
 
@@ -98,7 +100,7 @@ export const ReferencesStateField = StateField.define<DecorationSet>({
     for (let effect of transaction.effects) {
       
       if (effect.is(asyncReferencesDisplayDataEffect)) {
-                
+        
         const builder = new RangeSetBuilder<Decoration>();
         
         const prevStateField = transaction.startState.field(ReferencesStateField);
@@ -121,6 +123,7 @@ export const ReferencesStateField = StateField.define<DecorationSet>({
           return builder.finish();
 
         }
+        
 
       }
 
@@ -132,7 +135,8 @@ export const ReferencesStateField = StateField.define<DecorationSet>({
   provide(field: StateField<DecorationSet>): Extension {
     //return EditorView.decorations.from(field);
     return [EditorView.atomicRanges.of(view => view.state.field(field)),
-            EditorView.decorations.from(field)]
+            EditorView.decorations.from(field),
+          ]
   },
 
 });
@@ -141,8 +145,68 @@ export const ReferencesStateField = StateField.define<DecorationSet>({
 
 
 class ReferencesRendererPlugin implements PluginValue {
+
   constructor(readonly view: EditorView) {
     const stateFieldValue = view.state.field(ReferencesStateField);
+    this.dispatch(view);
+  }
+
+  async dispatch(view:EditorView){
+
+    const doc = view.state.doc;
+
+    const currentDocText = doc.toString();
+
+
+    const cursor = new SearchCursor(doc, `::: {#refs}\n:::\n`, 0);
+
+    const match = cursor.next();
+
+    let refIndex:number;
+
+    if (match.value.from == 0 || match.value.to == 0 || match.done == true){
+      refIndex = -1;
+    } else {
+      //const refIndex =  currentDocText.indexOf(`::: {#refs}\n:::\n`);
+      refIndex =  match.value.from;
+    }
+    
+    if (refIndex === -1){
+      //hack using setTimeout avoids the "Calls to EditorView.update are not allowed while an update is in progress"
+      setTimeout(() => {
+        view.dispatch({effects: asyncReferencesDisplayDataEffect.of(EmptyReferencesDisplayData),});
+      }, 50);
+      
+      return
+    }
+
+    const fmInfo:FrontMatterInfo = getFrontMatterInfo(currentDocText);
+    const currentDocTextNoFrontMatter = doc.sliceString(fmInfo.contentStart);
+
+    const citeKeys:string[] = citationsInText(currentDocTextNoFrontMatter);
+
+    const frontmatterObject = parseYaml(fmInfo.frontmatter);
+
+    const bib:string = frontmatterObject[FrontMatterBibliographyString];
+    const library = bib.split('/', 1)[0];
+    const style:string = frontmatterObject["csl"];
+
+    const references = await bibliography(citeKeys, library, style, 'text')
+    
+    const refData:ReferencesDisplayData = {
+        citeKeys: citeKeys,
+        library: library,
+        style: style,
+        contentType: 'text',
+        references: references,
+        posFrom: refIndex,
+        posTo: refIndex+15
+    };
+
+    view.dispatch({
+        effects: asyncReferencesDisplayDataEffect.of(refData),
+    });
+
   }
 
   async update(update: ViewUpdate) {
@@ -152,8 +216,20 @@ class ReferencesRendererPlugin implements PluginValue {
         const doc = update.state.doc;
 
         const currentDocText = doc.toString();
-        
-        const refIndex =  currentDocText.indexOf(`::: {#refs}\n:::`);
+
+        const cursor = new SearchCursor(doc, `::: {#refs}\n:::\n`, 0);
+
+        const match = cursor.next();
+
+        let refIndex:number;
+
+        if (match.value.from == 0 || match.value.to == 0 || match.done == true){
+          refIndex = -1;
+        } else {
+          //const refIndex =  currentDocText.indexOf(`::: {#refs}\n:::\n`);
+          refIndex =  match.value.from;
+        }
+
         
         if (refIndex === -1){
           //hack using setTimeout avoids the "Calls to EditorView.update are not allowed while an update is in progress"
@@ -169,26 +245,7 @@ class ReferencesRendererPlugin implements PluginValue {
 
         const citeKeys:string[] = citationsInText(currentDocTextNoFrontMatter);
 
-        let frontmatterKeys:string[] = []
-        let frontmatterValues:string[] = []
-
-        const tree = syntaxTree(update.state);
-
-        tree.iterate({
-            enter(node) {
-
-                const nodeText = doc.sliceString(node.from, node.to);
-
-                if (node.name === "atom_hmd-frontmatter"){
-                    frontmatterKeys.push(nodeText);
-                }
-                if (node.name === "hmd-frontmatter"){
-                    frontmatterValues.push(nodeText);
-                }
-            }
-        });
-
-        var frontmatterObject = Object.fromEntries(frontmatterKeys.map((key, index) => [key, frontmatterValues[index]]));
+        const frontmatterObject = parseYaml(fmInfo.frontmatter);
 
         const bib:string = frontmatterObject[FrontMatterBibliographyString];
         const library = bib.split('/', 1)[0];
@@ -213,7 +270,7 @@ class ReferencesRendererPlugin implements PluginValue {
   }
 
   destroy() {
-    // Cleanup if needed
+
   }
 }
 

@@ -57,6 +57,7 @@ This plugin's would fit optimally within your research workflow, if you operate 
 - The "Bibliography mode" allows you to alternatively list all the References in the accompanying Zotero collection for quick reference.
 - Choose a default of References View Mode versus Bibliography View Mode (via Plugin Settings).
 - Automatic highlighting of references with pdf attachments and One-click jump to the pdf in your Zotero Library.   
+- Insert "References" in the note's text via context menu. 
 
 ### Annotation features
 

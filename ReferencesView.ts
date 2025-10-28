@@ -8,6 +8,7 @@ import BibcitePlugin from 'main';
 import {FrontMatterBibliographyString} from "FrontMatter"
 import { bibliography, exportItems, exportItemsNonJSON, pandocFilter } from 'ZoteroFunctions';
 import { ItemAnnotationsData, CollectionData, processCollection, processAttachmentAnnotations, processCollectionAndCitations, processCollectionAttachmentAnnotations, ItemAnnotationsMap, CollectionAnnotationsMap } from "ReferenceProcessing";
+import { ReferencesRendererViewPlugin } from 'EditorExtensions';
 
 
 export const ReferencesViewType = 'ReferencesView';
@@ -568,6 +569,20 @@ export class ReferencesView extends ItemView {
     }
 
   };
+
+  renderInTextReferences(){
+      const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+			
+			// @ts-expect-error, not typed
+			const editorView = view.editor.cm as EditorView;
+
+			const plugin = editorView.plugin(ReferencesRendererViewPlugin);
+
+      if (plugin) {
+				plugin.dispatch(editorView);
+			}
+
+  }
 
 }
 

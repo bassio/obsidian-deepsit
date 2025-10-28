@@ -1,5 +1,7 @@
 import { App, Editor, MarkdownView, Menu, Modal, Notice, Plugin, PluginSettingTab, requireApiVersion, Setting, WorkspaceLeaf } from 'obsidian';
 
+import { EditorView } from '@codemirror/view';
+
 import { CitationSuggest } from "CitationSuggest";
 import { ReferencesView, ReferencesViewType } from 'ReferencesView';
 import { FrontMatterBibliographyString } from 'FrontMatter';
@@ -87,6 +89,7 @@ export default class DeepSitPlugin extends Plugin {
 			} else {
 				this.view?.renderReferences();
 			}
+
 		}
     }
 
@@ -155,7 +158,7 @@ export default class DeepSitPlugin extends Plugin {
 		}));
 
 		this.registerEditorExtension([ReferencesStateField, ReferencesRendererViewPlugin]);
-
+		
 		this.registerMarkdownPostProcessor(async (element, context) => {
 			
 			if (element.className == 'el-p'){
@@ -173,8 +176,11 @@ export default class DeepSitPlugin extends Plugin {
 							let view = leaf.view; // You now have your CustomView
 							const refs = await view.processReferences();
 							const library = context.frontmatter[FrontMatterBibliographyString].split('/', 1)[0];
-							const bib:string = await view.generateBibliography(refs.citations, library, 'vancouver', 'text')
-							element.textContent = bib.replace('\n', '<br>');
+							let style = context.frontmatter['csl'];
+							if (!style){ style == "vancouver" }
+							const biblio:string = await view.generateBibliography(refs.citations, library, style, 'text')
+							element.innerText = biblio;
+							element.className = "references-reading";
 						}
 
 					}
@@ -189,12 +195,7 @@ export default class DeepSitPlugin extends Plugin {
 
 		this.app.workspace.onLayoutReady(async () => {
 			await this.initLeaf();
-			/*
-			const view = this.app.workspace.getActiveViewOfType(MarkdownView);
-			const editor = view.editor;
-			editor.cm.view.dispatch({changes: [
-    			{ from: 0, insert: `` }]});
-			*/
+
 		});
 
 	}

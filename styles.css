@@ -198,3 +198,9 @@ div.references-widget {
     padding: var(--embed-padding);
     border-inline-start: var(--embed-border-start)
 }
+
+div.references-reading {
+    font-size: var(--font-ui-small);
+    color: var(--text-muted);
+    
+}
