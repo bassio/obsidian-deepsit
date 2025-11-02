@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-deepsit",
-	"version": "0.1.7",
+	"version": "0.1.8",
 	"description": "Deep Sit plugin for Obsidian",
 	"main": "main.js",
 	"scripts": {
