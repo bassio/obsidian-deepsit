@@ -87,15 +87,13 @@ export function citationsInText(textString:string):string[] {
         const re = /\[(@[a-zA-Z0-9_-]+[ ]*;?[ ]*)+\]/g
 
         let matches = textString.match(re)
-
-        let matches_unique;
         
         if (matches){
             const matchesParsed = matches
                         .map(item => item.slice(1, -1).split(";").map( i => i.trim().replace("@", "") ))
                         .flat(1);
 
-            matchesUnique = new Set(matchesParsed);
+            const matchesUnique = new Set(matchesParsed);
 
             return [...matchesUnique];
 
@@ -117,8 +115,6 @@ export async function processCollectionAndCitations(collectionPath:string, fileT
     try {
 
         refData = await processCollection(collectionPath);
-
-        const libraryName = refData.library;
 
         const citekeys = Array.from(refData.data.keys())
         

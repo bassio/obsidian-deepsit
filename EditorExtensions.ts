@@ -1,5 +1,3 @@
-
-import { syntaxTree } from '@codemirror/language';
 import {
   Extension,
   RangeSetBuilder,
@@ -19,9 +17,9 @@ import {
 import { SearchCursor } from '@codemirror/search';
 
 import { FrontMatterBibliographyString } from 'FrontMatter';
-import { editorEditorField, editorLivePreviewField, getFrontMatterInfo, FrontMatterInfo, parseYaml } from 'obsidian';
+import { editorLivePreviewField, getFrontMatterInfo, FrontMatterInfo, parseYaml } from 'obsidian';
 import { citationsInText } from 'ReferenceProcessing';
-import { bibliography, bibliographySync } from 'ZoteroFunctions';
+import { bibliography } from 'ZoteroFunctions';
 
 interface ReferencesDisplayData {
     citeKeys:string[];
@@ -106,7 +104,7 @@ export const ReferencesStateField = StateField.define<DecorationSet>({
         
         const builder = new RangeSetBuilder<Decoration>();
         
-        const prevStateField = transaction.startState.field(ReferencesStateField);
+        //const prevStateField = transaction.startState.field(ReferencesStateField);
 
         if (effect.value == EmptyReferencesDisplayData){
 
@@ -150,7 +148,7 @@ export const ReferencesStateField = StateField.define<DecorationSet>({
 class ReferencesRendererPlugin implements PluginValue {
 
   constructor(readonly view: EditorView) {
-    const stateFieldValue = view.state.field(ReferencesStateField);
+    //const stateFieldValue = view.state.field(ReferencesStateField);
     this.dispatch(view);
   }
 

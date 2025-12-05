@@ -1,13 +1,13 @@
 
 const fs = require('fs');
 
-import { App, ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath, TFile, TAbstractFile } from 'obsidian';
+import { App, ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath } from 'obsidian';
 
 import BibcitePlugin from 'main';
 
 import {FrontMatterBibliographyString} from "FrontMatter"
-import { bibliography, exportItems, exportItemsNonJSON, pandocFilter } from 'ZoteroFunctions';
-import { ItemAnnotationsData, CollectionData, processCollection, processAttachmentAnnotations, processCollectionAndCitations, processCollectionAttachmentAnnotations, ItemAnnotationsMap, CollectionAnnotationsMap } from "ReferenceProcessing";
+import { bibliography, exportItems, exportItemsNonJSON } from 'ZoteroFunctions';
+import { ItemAnnotationsData, CollectionData, processAttachmentAnnotations, processCollectionAndCitations, processCollectionAttachmentAnnotations, ItemAnnotationsMap, CollectionAnnotationsMap } from "ReferenceProcessing";
 import { ReferencesRendererViewPlugin } from 'EditorExtensions';
 
 
@@ -66,12 +66,13 @@ export class ReferencesView extends ItemView {
     const mode = bibliographyMode ? 'Bibliography' : 'References' 
     const oppositeMode = bibliographyMode ? 'References' : 'Bibliography'
     
-    let headerText;
 
     if (!annotationsView){
-      headerText = header.createEl("span", { text: mode, cls: "references-header-text" });
+      //headerText
+      header.createEl("span", { text: mode, cls: "references-header-text" });
     } else {
-      headerText = header.createEl("span", { text: 'Annotations', cls: "references-header-text" });
+      //headerText
+      header.createEl("span", { text: 'Annotations', cls: "references-header-text" });
     }
     
     const refreshButton = header.createEl("button", { text: "Refresh", cls: "refresh-button" , title: "Refresh"});
@@ -187,7 +188,8 @@ export class ReferencesView extends ItemView {
 
     this.setHeader(header, false);
 
-    const emptyDiv = containerDiv.createDiv({
+    //emptyDiv
+    containerDiv.createDiv({
       cls: 'pane-empty',
       text: containerDiv.createEl("img", { attr: { src: this.loadingSpinnerAsset }})
     });
@@ -414,7 +416,7 @@ export class ReferencesView extends ItemView {
 
     await this.setViewContent(containerDiv, false); // bibliographyMode=false
 
-    await this.renderAttachments(refs, 'references');
+    await this.renderAttachments(refs);
 
   };
 
@@ -475,7 +477,7 @@ export class ReferencesView extends ItemView {
 
     await this.setViewContent(containerDiv, true); // bibliographyMode=true
 
-    await this.renderAttachments(refs, 'bibliography');
+    await this.renderAttachments(refs);
   
   }
 
@@ -528,21 +530,10 @@ export class ReferencesView extends ItemView {
 
   }
 
-  async renderAttachments(collectionData:CollectionData, bibliographyModeString:string) {
+  async renderAttachments(collectionData:CollectionData) {
 
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('references-div');
-
-    let referenceEntries;
-    let bibliographyMode;
-
-    if (bibliographyModeString == 'references'){
-      referenceEntries = collectionData.citations;
-      bibliographyMode = false;
-    } else {
-      referenceEntries = collectionData.bibliography;
-      bibliographyMode = true;
-    }
 
     const itemAnnotations:ItemAnnotationsMap = await this.processAttachmentsAnnotations(collectionData);
 
@@ -550,6 +541,7 @@ export class ReferencesView extends ItemView {
 
       const linkDomElement = this.contentEl.querySelector(`.reference-div .reference-title a[data-citekey='${annotationsData.reference.citekey}']`);
       linkDomElement?.setAttribute('href', annotationsData.parentUri);
+      linkDomElement?.setAttribute('data-citekey', citekey);
 
       if (annotationsData.annotations.length){
 
