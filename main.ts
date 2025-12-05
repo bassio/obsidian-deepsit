@@ -31,10 +31,10 @@ class DeepSitSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		new Setting(containerEl).setName('Deep Sit Settings').setHeading();
+		new Setting(containerEl).setName('Deep Sit: Settings').setHeading();
 
 		new Setting(containerEl)
-			.setName('Default Reference List View Mode')
+			.setName('Default References view mode')
 			.setDesc('The default view mode for the References view. Options include "References mode" (default) and "Bibliography mode".')
 			.addDropdown((dropdown) => {
 				dropdown
@@ -49,10 +49,10 @@ class DeepSitSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName('Default Annotations View Mode')
-			.setDesc('The default view mode for the Annotations. Options include "Modal" (default) and "View Pane".')
+			.setDesc('The default view mode for the Annotations. Options include "Modal" (default) and "View pane".')
 			.addDropdown((dropdown) => {
 				dropdown
-				.addOption('viewpane', 'View Pane')
+				.addOption('viewpane', 'View pane')
 				.addOption('modal', "Modal")
 				.setValue(this.plugin.settings.defaultAnnotationsMode)
 				.onChange(async (value) => {
@@ -105,7 +105,7 @@ export default class DeepSitPlugin extends Plugin {
 
 		this.addCommand({
 			id: 'show-references-view',
-			name: 'Show References',
+			name: 'Show references',
 			callback: async () => {
 				await this.initLeaf();
 			},
@@ -138,7 +138,7 @@ export default class DeepSitPlugin extends Plugin {
 							const submenu = item.setSubmenu();
 
 							submenu.addItem(subitem => {
-								subitem.setTitle('Insert Citation')
+								subitem.setTitle('Insert citation')
 								.setIcon('brackets')
 								.onClick(() => {
 									editor.replaceSelection(`[@]`);
@@ -148,7 +148,7 @@ export default class DeepSitPlugin extends Plugin {
 							});
 
 							submenu.addItem(subitem => {
-								subitem.setTitle('Insert References')
+								subitem.setTitle('Insert references')
 								.setIcon('library-big')
 								.onClick(() => editor.replaceSelection(`::: {#refs}\n:::\n`));
 							});

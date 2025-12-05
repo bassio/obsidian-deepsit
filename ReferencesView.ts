@@ -77,7 +77,7 @@ export class ReferencesView extends ItemView {
     const refreshButton = header.createEl("button", { text: "Refresh", cls: "refresh-button" , title: "Refresh"});
     setIcon(refreshButton, "refresh-cw");
 
-    const modeButton = header.createEl("button", { text: "Switch References/Bibliography Mode", cls: "mode-button", title: `Switch to ${oppositeMode} mode` });
+    const modeButton = header.createEl("button", { text: "Switch References/Bibliography mode", cls: "mode-button", title: `Switch to ${oppositeMode} mode` });
     setIcon(modeButton, "book-copy");
 
     const annotationsButton = header.createEl("button", { text: `${mode} Annotations`, cls: "annotations-button", title: `Annotations` });
