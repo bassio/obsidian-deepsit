@@ -528,7 +528,7 @@ export class ReferencesView extends ItemView {
 
   }
 
-  async renderAttachments(collectionData:CollectionData, bibliographyModeString:String) {
+  async renderAttachments(collectionData:CollectionData, bibliographyModeString:string) {
 
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('references-div');
