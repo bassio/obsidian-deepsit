@@ -31,8 +31,6 @@ class DeepSitSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		new Setting(containerEl).setName('Deep Sit').setHeading();
-
 		new Setting(containerEl)
 			.setName('Default References view mode')
 			.setDesc('The default view mode for the References view. Options include "References mode" (default) and "Bibliography mode".')
