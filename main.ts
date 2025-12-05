@@ -1,6 +1,5 @@
-import { App, Editor, MarkdownView, Menu, Modal, Notice, Plugin, PluginSettingTab, requireApiVersion, Setting, WorkspaceLeaf } from 'obsidian';
+import { App, Plugin, PluginSettingTab, requireApiVersion, Setting, WorkspaceLeaf } from 'obsidian';
 
-import { EditorView } from '@codemirror/view';
 
 import { CitationSuggest } from "CitationSuggest";
 import { ReferencesView, ReferencesViewType } from 'ReferencesView';
