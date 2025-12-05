@@ -184,7 +184,7 @@ export async function exportItems(citeKeys:string[], libraryID:string, translato
         if (typeof(result) === 'string') {
             result = JSON.parse(result);
         } else {
-            result = result;
+            /* result = result; */ // no changes
         };
 
         return result;
