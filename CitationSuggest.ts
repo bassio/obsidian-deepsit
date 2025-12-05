@@ -61,7 +61,7 @@ export class CitationSuggest extends EditorSuggest<Suggestion> {
 			if (lineToCursor.lastIndexOf("[") < lineToCursor.lastIndexOf("]")){
 				return null;
 			} else {
-
+				// Do nothing
 			};
 		}
 

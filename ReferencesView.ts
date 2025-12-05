@@ -31,8 +31,8 @@ export class ReferencesView extends ItemView {
     this.collectionAnnotationData = new Map()
     this.contentEl.addClass('bibcite-references');
     this.setEmptyView(this.plugin.settings.defaultViewMode == 'bibliography' ? true : false);
-    this.addAction("refresh-cw", "Refresh References", () => {
-      this.refreshReferences();
+    this.addAction("refresh-cw", "Refresh References", async () => {
+      await this.refreshReferences();
     })
     
     const vault = this.plugin.app.vault;
@@ -61,7 +61,7 @@ export class ReferencesView extends ItemView {
     this._activeViewMode = v;
   }
 
-  async setHeader(header: HTMLElement, bibliographyMode=false, annotationsView=false){
+  setHeader(header: HTMLElement, bibliographyMode:boolean=false, annotationsView=false){
 
     const mode = bibliographyMode ? 'Bibliography' : 'References' 
     const oppositeMode = bibliographyMode ? 'References' : 'Bibliography'
@@ -82,7 +82,8 @@ export class ReferencesView extends ItemView {
 
     const annotationsButton = header.createEl("button", { text: `${mode} Annotations`, cls: "annotations-button", title: `Annotations` });
     setIcon(annotationsButton, "book-open-text");
-    annotationsButton.onclick = async (e) => {
+
+    annotationsButton.onclick = async () => {
       const annotationsMode = this.getAnnotationsViewMode();
 
       if (annotationsMode == 'modal') {
@@ -91,27 +92,27 @@ export class ReferencesView extends ItemView {
         new MultiAnnotationsModal(this.app, attachmentAnnotations).open();  
       }
       else if (annotationsMode == 'viewpane') {
-        this.renderAnnotations(bibliographyMode);
+        await this.renderAnnotations(bibliographyMode);
       }
     };
 
 
     if (!bibliographyMode){
-      refreshButton.onclick = async (e) => {
+      refreshButton.onclick = async () => {
         await this.refreshReferences();
-        this.renderReferences();
+        await this.renderReferences();
       }
-      modeButton.onclick = (e) => {
-        this.renderBibliography();
+      modeButton.onclick = async () => {
+        await this.renderBibliography();
       }
     } else {
-      refreshButton.onclick = async (e) => {
+      refreshButton.onclick = async () => {
         await this.refreshReferences();
-        this.renderBibliography();
-        this.refreshAttachmentsAnnotations();
+        await this.renderBibliography();
+        await this.refreshAttachmentsAnnotations();
       }
-      modeButton.onclick = (e) => {
-        this.renderReferences();
+      modeButton.onclick = async () => {
+        await this.renderReferences();
       }
     }
 
@@ -123,25 +124,25 @@ export class ReferencesView extends ItemView {
     const containerDiv = this.contentEl.createDiv({cls:"container-div" });
     const header = containerDiv.createDiv({cls:"references-header"});
 
-    await this.setHeader(header, bibliographyMode, annotationsView);
+    this.setHeader(header, bibliographyMode, annotationsView);
 
     if (!content) {
-      await this.setEmptyView();
+      this.setEmptyView();
     } else {
       this.contentEl.append(content);
     }
   }
 
-  async setErrorView(error) {
+  setErrorView(error) {
     this.contentEl.empty();
     const containerDiv = this.contentEl.createDiv({cls:"container-div" });
     const header = containerDiv.createDiv({cls:"references-header"});
     const headerText = header.createEl("span", { text: "References", cls: "references-header-text" });
     const refreshButton = header.createEl("button", { text: "Refresh", cls: "refresh-button" });
     setIcon(refreshButton, "refresh-cw");
-    refreshButton.onclick = async (e) => {
+    refreshButton.onclick = async () => {
       await this.refreshReferences();
-      this.renderReferences();
+      await this.renderReferences();
     }
 
     if (error.message == 'net::ERR_CONNECTION_REFUSED'){
@@ -157,12 +158,12 @@ export class ReferencesView extends ItemView {
     }
   }
 
-  async setEmptyView(bibliographyMode=false) {
+  setEmptyView(bibliographyMode=false) {
     this.contentEl.empty();
     const containerDiv = this.contentEl.createDiv({cls:"container-div" });
     const header = containerDiv.createDiv({cls:"references-header"});
 
-    await this.setHeader(header, bibliographyMode);
+    this.setHeader(header, bibliographyMode);
 
     if (!bibliographyMode){
       containerDiv.createDiv({
@@ -184,7 +185,7 @@ export class ReferencesView extends ItemView {
     const containerDiv = this.contentEl.createDiv({cls:"container-div" });
     const header = containerDiv.createDiv({cls:"references-header"});
 
-    await this.setHeader(header, false);
+    this.setHeader(header, false);
 
     const emptyDiv = containerDiv.createDiv({
       cls: 'pane-empty',
@@ -265,7 +266,7 @@ export class ReferencesView extends ItemView {
     const file = this.plugin.app.workspace.getActiveFile();
 
     if (file){
-      this.plugin.app.fileManager.processFrontMatter(file, (frontmatter) => {
+      await this.plugin.app.fileManager.processFrontMatter(file, (frontmatter) => {
         frontmatter.references = jsonExport;
       });
     }
@@ -287,12 +288,12 @@ export class ReferencesView extends ItemView {
       const bibtexFile = this.plugin.app.vault.getAbstractFileByPath(bibtexPath);
 
       if (bibtexFile){
-        this.plugin.app.fileManager.trashFile(bibtexFile); //delete existing bibtex file first if present
+        await this.plugin.app.fileManager.trashFile(bibtexFile); //delete existing bibtex file first if present
       }
 
-      this.plugin.app.vault.create(bibtexPath, bibExport);
+      await this.plugin.app.vault.create(bibtexPath, bibExport);
 
-      this.plugin.app.fileManager.processFrontMatter(file, (frontmatter) => {
+      await this.plugin.app.fileManager.processFrontMatter(file, (frontmatter) => {
         frontmatter['bibliography'] = `${file.basename}.bibtex`;
       });
 
@@ -358,7 +359,7 @@ export class ReferencesView extends ItemView {
 
   async renderReferences() {
 
-    this.setLoadingView();
+    await this.setLoadingView();
 
     const refs = await this.processReferences();
     
@@ -366,7 +367,7 @@ export class ReferencesView extends ItemView {
       if ('error' in refs) {
         this.setErrorView(refs.error);
       } else {
-        await this.setEmptyView();
+        this.setEmptyView();
       };
       return
     }
@@ -411,23 +412,23 @@ export class ReferencesView extends ItemView {
       containerDiv.appendChild(element);
     });  
 
-    this.setViewContent(containerDiv, false); // bibliographyMode=false
+    await this.setViewContent(containerDiv, false); // bibliographyMode=false
 
-    this.renderAttachments(refs, 'references');
+    await this.renderAttachments(refs, 'references');
 
   };
 
   async renderBibliography() {
 
-    this.setLoadingView();
+    await this.setLoadingView();
 
     const refs = await this.processReferences();
     
     if (!refs.bibliography || refs.bibliography.length ==0){
       if ('error' in refs) {
-        await this.setErrorView(refs.error);
+        this.setErrorView(refs.error);
       } else {
-        await this.setEmptyView(true);
+        this.setEmptyView(true);
       };
       return
     }
@@ -472,13 +473,13 @@ export class ReferencesView extends ItemView {
       containerDiv.appendChild(element);
     });
 
-    this.setViewContent(containerDiv, true); // bibliographyMode=true
+    await this.setViewContent(containerDiv, true); // bibliographyMode=true
 
-    this.renderAttachments(refs, 'bibliography');
+    await this.renderAttachments(refs, 'bibliography');
   
   }
 
-  async renderAnnotations(bibliographyMode) {
+  async renderAnnotations(bibliographyMode:boolean) {
 
     const containerDiv = document.createElement('div');
     containerDiv.classList.add('annotations-leaf-div');
@@ -486,11 +487,12 @@ export class ReferencesView extends ItemView {
     const attachmentAnnotationsMap = await processAttachmentAnnotations(this.activeFileCollectionData, bibliographyMode);
     const attachmentAnnotations = Array.from(attachmentAnnotationsMap.values())
 
-    const fragment = new MultiAnnotationsModal(this.app, attachmentAnnotations).processContent();
+    const multiAnnotations = new MultiAnnotationsModal(this.app, attachmentAnnotations);
+    const fragment = await multiAnnotations.processContent();
 
     containerDiv.appendChild(fragment);
 
-    this.setViewContent(containerDiv, !bibliographyMode, true);
+    await this.setViewContent(containerDiv, !bibliographyMode, true);
     
   };
 
@@ -613,7 +615,7 @@ export class AnnotationsModal extends Modal {
     this.renderContent();
   };
 
-  processContent() {
+  async processContent() {
     const citekey = this._citekey;
     const itemData = this._data;
     const fragment = document.createDocumentFragment();
@@ -622,21 +624,21 @@ export class AnnotationsModal extends Modal {
     fragment.createEl("div", { text: `${itemData.title}`, cls: 'item-annotations-header-item-title'  });
 
     for (const annotation of this._annotations) {
-      this.renderAnnotation(fragment, annotation);
+      await this.renderAnnotation(fragment, annotation);
     }
 
     return fragment;
 
   }
 
-  renderContent() {
+  async renderContent() {
     
     const fragment = document.createDocumentFragment();
 
     const containerDiv = fragment.createEl('div');
     containerDiv.classList.add('annotations-div');
     
-    const contentFragment = this.processContent();
+    const contentFragment = await this.processContent();
     
     containerDiv.appendChild(contentFragment)
 
@@ -648,7 +650,8 @@ export class AnnotationsModal extends Modal {
     fragment.createEl("p", "There are no annotations associated with this reference.");
   }
 
-  renderAnnotation(fragment: DocumentFragment, annotation: Object){
+  async renderAnnotation(fragment: DocumentFragment, annotation: Object){
+
     const annotationDiv = fragment.createDiv({cls: ["annotation-div", `annotation-${annotation.annotationType}`] });
 
     if (annotation['annotationType'] == 'highlight'){
@@ -665,8 +668,8 @@ export class AnnotationsModal extends Modal {
       setIcon(linkButton, "external-link");
       let copyButton = annotationDiv.createEl("a", {cls: "annotation-copy-icon", title: "Copy to clipboard"});
       setIcon(copyButton, "clipboard-copy");
-      copyButton.onclick = (e) => {
-        navigator.clipboard.writeText(`${annotation['annotationText']}[@${this._citekey}]\n[Link](${annotationUri})\n`);
+      copyButton.onclick = async () => {
+        await navigator.clipboard.writeText(`${annotation['annotationText']}[@${this._citekey}]\n[Link](${annotationUri})\n`);
         new Notice('Annotation copied to clipboard!', 1000);
         this.close();
       }
@@ -714,7 +717,7 @@ export class MultiAnnotationsModal extends Modal {
     return citekeys;
   }
   
-  processContent() {
+  async processContent() {
     const fragment = document.createDocumentFragment();
 
     const containerDiv = fragment.createEl('div');
@@ -722,7 +725,7 @@ export class MultiAnnotationsModal extends Modal {
 
     for (const data of this._data) {
       const modal = new AnnotationsModal(this.app, data);
-      const annotationFragment = modal.processContent();
+      const annotationFragment = await modal.processContent();
       containerDiv.appendChild(annotationFragment)
     }
     
@@ -730,8 +733,8 @@ export class MultiAnnotationsModal extends Modal {
 
   }
 
-  renderContent() {
-    const fragment = this.processContent();
+  async renderContent() {
+    const fragment = await this.processContent();
     this.contentEl.appendChild(fragment);
   }
 

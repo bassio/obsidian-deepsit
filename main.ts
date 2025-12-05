@@ -43,7 +43,7 @@ class DeepSitSettingTab extends PluginSettingTab {
 				.setValue(this.plugin.settings.defaultViewMode)
 				.onChange(async (value) => {
 							this.plugin.settings.defaultViewMode = value;
-							this.plugin.saveSettings();
+							await this.plugin.saveSettings();
 			  				})
 			});
 
@@ -57,7 +57,7 @@ class DeepSitSettingTab extends PluginSettingTab {
 				.setValue(this.plugin.settings.defaultAnnotationsMode)
 				.onChange(async (value) => {
 							this.plugin.settings.defaultAnnotationsMode = value;
-							this.plugin.saveSettings();
+							await this.plugin.saveSettings();
 							})
 			});
 			  
@@ -73,7 +73,7 @@ export default class DeepSitPlugin extends Plugin {
 	get activeFilePath() {
         return this._activeFilePath;
     }
-    set activeFilePath(path) {
+    async setActiveFilePath(path) {
         if (path != this._activeFilePath){
 			this._activeFilePath = path;
 
@@ -107,26 +107,26 @@ export default class DeepSitPlugin extends Plugin {
 			id: 'show-references-view',
 			name: 'Show References',
 			callback: async () => {
-				this.initLeaf();
+				await this.initLeaf();
 			},
 		});
 
 
-		this.registerEvent(this.app.workspace.on('active-leaf-change', (leaf:WorkspaceLeaf) => {
+		this.registerEvent(this.app.workspace.on('active-leaf-change', async (leaf:WorkspaceLeaf) => {
 			const activeFile = this.app.workspace.getActiveFile();
 			if (!activeFile){
-				this.activeFilePath = "";
+				await this.setActiveFilePath("");
 			} else {
-				this.activeFilePath = activeFile.path;
+				await this.setActiveFilePath(activeFile.path);
 			}
 		}));
 		
-		this.registerEvent(this.app.workspace.on('layout-change', (leaf:WorkspaceLeaf) => {
+		this.registerEvent(this.app.workspace.on('layout-change', async (leaf:WorkspaceLeaf) => {
 			const activeFile = this.app.workspace.getActiveFile();
 			if (!activeFile){
-				this.activeFilePath = "";
+				await this.setActiveFilePath("");
 			} else if (activeFile.path != this.activeFilePath) {
-				this.activeFilePath = activeFile.path;
+				await this.setActiveFilePath(activeFile.path);
 			}
 		}));
 		

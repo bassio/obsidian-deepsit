@@ -76,7 +76,10 @@ class ReferencesWidget extends WidgetType {
         if (this.data.contentType == 'text'){
           div.textContent = this.data.references;
         } else if (this.data.contentType == 'html'){
-          div.innerHTML = this.data.references;
+          const referencesNode = new DOMParser().parseFromString(this.data.references, 'text/html');
+          Array.from(referencesNode.body.children).forEach(element => {
+            div.appendChild(element);
+          });
         }
         return div;
     }
