@@ -175,7 +175,9 @@ export default class DeepSitPlugin extends Plugin {
 							const refs = await view.processReferences();
 							const library = context.frontmatter[FrontMatterBibliographyString].split('/', 1)[0];
 							let style = context.frontmatter['csl'];
-							if (!style){ style == "vancouver" }
+							if (!style){
+								style = "vancouver";
+							}
 							const biblio:string = await view.generateBibliography(refs.citations, library, style, 'text')
 							element.innerText = biblio;
 							element.className = "references-reading";
