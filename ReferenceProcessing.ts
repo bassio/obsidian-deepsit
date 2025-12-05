@@ -36,8 +36,8 @@ export interface Annotation {
 export interface ItemAnnotationsData {
     reference: Reference;
     parentUri: string;
-    annotations: Object[];
-    itemData: Object;
+    annotations: object[];
+    itemData: object;
 }
 
 export type ItemAnnotationsMap = Map<CiteKey, ItemAnnotationsData>
@@ -46,7 +46,7 @@ export interface CollectionData {
     path: CollectionPath;
     library: string;
     bibliography: string[];
-    data: Map<string, Object>;
+    data: Map<string, object>;
     citations?: string[];
     error?: Error;
     annotationsMap: ItemAnnotationsMap
@@ -64,7 +64,7 @@ export async function processCollection(collectionPath:string):Promise<Collectio
         let dataJson = await exportCollectionPath(collectionPath, "json");
         dataJson.map(item => item['id'] = item['citation-key'])
 
-        const dataJsonMap:Map<string, Object> = new Map(dataJson.map(item => [item.id, item]));
+        const dataJsonMap:Map<string, object> = new Map(dataJson.map(item => [item.id, item]));
         const citekeys = dataJson.map(item => item.id);
         const citekeysNotEmpty = citekeys.filter(item => item !== null && item !== undefined && item !== '');
         const citekeysUnique:Set<string> = new Set(citekeysNotEmpty)

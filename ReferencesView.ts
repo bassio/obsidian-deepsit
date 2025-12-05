@@ -592,7 +592,7 @@ export class ReferencesView extends ItemView {
 export class AnnotationsModal extends Modal {
   private _citekey: string;
   private _parentUri: string;
-  private _annotations: Object;
+  private _annotations: object;
 
   constructor(app: App, private annotationData: ItemAnnotationsData) {
     super(app);
@@ -650,7 +650,7 @@ export class AnnotationsModal extends Modal {
     fragment.createEl("p", "There are no annotations associated with this reference.");
   }
 
-  async renderAnnotation(fragment: DocumentFragment, annotation: Object){
+  async renderAnnotation(fragment: DocumentFragment, annotation: object){
 
     const annotationDiv = fragment.createDiv({cls: ["annotation-div", `annotation-${annotation.annotationType}`] });
 
