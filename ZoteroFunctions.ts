@@ -233,7 +233,7 @@ export async function attachments(citeKey:string, library:string) {
         return result;
 	
     } catch (error) {
-        console.log(`Error generating attachments for citation key: ${citeKey}`)
+        console.error(`Error generating attachments for citation key: ${citeKey}`)
         throw error;
     }
 
