@@ -142,29 +142,23 @@ export async function exportCollection(collectionId:string, libraryId:string, bi
 }
 
 export async function bibliography(citeKeys:string[], library:string='', style:string, contentType:string='text', quickCopy:boolean=false) {
-    try { 
-        
-        const format = {
-                        contentType: contentType, // can be 'html'
-                        locale: '',
-                        id: style,
-                        quickCopy: quickCopy,
-                        }
+    
+    const format = {
+                    contentType: contentType, // can be 'html'
+                    locale: '',
+                    id: style,
+                    quickCopy: quickCopy,
+                    }
 
-        const jsonRpcData = {
-            jsonrpc: "2.0",
-            method: "item.bibliography",
-            params: [citeKeys, format, library]
-        };
+    const jsonRpcData = {
+        jsonrpc: "2.0",
+        method: "item.bibliography",
+        params: [citeKeys, format, library]
+    };
 
-        const result = await makeJsonRpcHttpRequest(baseOptions, JSON.stringify(jsonRpcData));
+    const result = await makeJsonRpcHttpRequest(baseOptions, JSON.stringify(jsonRpcData));
 
-        return result;
-
-    }
-    catch (error) {
-        throw error;
-    }
+    return result;
 
 }
 
@@ -241,50 +235,40 @@ export async function attachments(citeKey:string, library:string) {
 
 export async function pandocFilter(citekeys:string[], asCSL:boolean, libraryID:string, style, locale){
 
-    try {
+    const jsonRpcData = {
+        jsonrpc: "2.0",
+        method: "item.pandoc_filter",
+        params: [citekeys, asCSL, libraryID, style]
+    };
 
-        const jsonRpcData = {
-            jsonrpc: "2.0",
-            method: "item.pandoc_filter",
-            params: [citekeys, asCSL, libraryID, style]
-        };
+    const result = await makeJsonRpcHttpRequest(baseOptions, JSON.stringify(jsonRpcData));
 
-        const result = await makeJsonRpcHttpRequest(baseOptions, JSON.stringify(jsonRpcData));
-
-        return result;
-	
-    } catch (error) {
-        throw error;
-    }
+    return result;
 
 }
 
 
 export async function exportCollectionPath(collectionPath:string, bibFormat = 'betterbibtex') {
-    try {
-        const coll = await locateCollection(collectionPath)
-        const exported_collection = await exportCollection(coll.collectionId, coll.libraryId, bibFormat);
-		return exported_collection;
-	} catch (error) {
-        throw error;
-    }
+
+    const coll = await locateCollection(collectionPath)
+    const exported_collection = await exportCollection(coll.collectionId, coll.libraryId, bibFormat);
+    return exported_collection;
+
 }
+
 
 export async function collectionCitekeys(collectionPath:string) {
-    try {
-        const resultJson = await exportCollectionPath(collectionPath, "json");
-        return resultJson.map(item => item.id);
-    } catch (error) {
-        throw error;
-    }
+
+    const resultJson = await exportCollectionPath(collectionPath, "json");
+    return resultJson.map(item => item.id);
+
 }
 
+
 export async function collectionCitekeysTitles(collectionPath:string) {
-    try {
-        const resultJson = await exportCollectionPath(collectionPath, "json");
-        const result_keys_title = resultJson.map(item => {return {'id': item.id, 'title': item.title} });
-	    return result_keys_title;
-    } catch (error) {
-        throw error;
-    } 
+
+    const resultJson = await exportCollectionPath(collectionPath, "json");
+    const result_keys_title = resultJson.map(item => {return {'id': item.id, 'title': item.title} });
+    return result_keys_title;
+
 }
