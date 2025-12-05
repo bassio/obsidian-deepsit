@@ -149,10 +149,10 @@ class ReferencesRendererPlugin implements PluginValue {
 
   constructor(readonly view: EditorView) {
     //const stateFieldValue = view.state.field(ReferencesStateField);
-    this.dispatch(view);
+    this.initialDispatch(view);
   }
 
-  async dispatch(view:EditorView){
+  initialDispatch(view:EditorView){
 
     const doc = view.state.doc;
 
@@ -192,21 +192,32 @@ class ReferencesRendererPlugin implements PluginValue {
     const library = bib.split('/', 1)[0];
     const style:string = frontmatterObject["csl"];
 
-    const references = await bibliography(citeKeys, library, style, 'text')
-    
-    const refData:ReferencesDisplayData = {
-        citeKeys: citeKeys,
-        library: library,
-        style: style,
-        contentType: 'text',
-        references: references,
-        posFrom: refIndex,
-        posTo: refIndex+15
-    };
+    bibliography(citeKeys, library, style, 'text')
+    .then(
+      function(references) {
+        const refData:ReferencesDisplayData = {
+            citeKeys: citeKeys,
+            library: library,
+            style: style,
+            contentType: 'text',
+            references: references,
+            posFrom: refIndex,
+            posTo: refIndex+15
+        };
 
-    view.dispatch({
-        effects: asyncReferencesDisplayDataEffect.of(refData),
-    });
+        view.dispatch({
+            effects: asyncReferencesDisplayDataEffect.of(refData),
+        });
+        
+      },
+      function(error) {
+        console.error(error);
+        //hack using setTimeout avoids the "Calls to EditorView.update are not allowed while an update is in progress"
+        setTimeout(() => {
+          view.dispatch({effects: asyncReferencesDisplayDataEffect.of(EmptyReferencesDisplayData),});
+        }, 50);
+      }
+    )
 
   }
 
