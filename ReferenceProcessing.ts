@@ -153,7 +153,7 @@ export async function processCollectionAndCitations(collectionPath:string, fileT
 
 };
 
-export async function processAttachmentAnnotations(collectionData:CollectionData, bibliographyMode:Boolean=false):Promise<ItemAnnotationsMap> {
+export async function processAttachmentAnnotations(collectionData:CollectionData, bibliographyMode:boolean=false):Promise<ItemAnnotationsMap> {
 
     const annotationsMap:ItemAnnotationsMap = new Map();
 
