@@ -1,5 +1,5 @@
 
-const fs = require('fs');
+import * as fs from 'fs'
 
 import { App, ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath } from 'obsidian';
 
@@ -39,8 +39,9 @@ export class ReferencesView extends ItemView {
     const adapter = vault.adapter;
     const assetFileName = "spinner.svg";
 
-    const path = require('path')
-    const assetPath = normalizePath(path.join(this.plugin.manifest.dir, assetFileName));
+    const paths = [this.plugin.manifest.dir, assetFileName]
+    const joinedPath = paths.join('/')
+    const assetPath = normalizePath(joinedPath);
     
     this.loadingSpinnerAsset = adapter.getResourcePath(assetPath);
     
@@ -283,9 +284,11 @@ export class ReferencesView extends ItemView {
     const file = this.plugin.app.workspace.getActiveFile();
 
     if (file){
-      const path = require('path')
+      const paths = [file.parent?.path, `${file.basename}.bibtex`]
 
-      const bibtexPath:string = normalizePath(path.join(file.parent?.path, `${file.basename}.bibtex`))
+      const joinedPath = paths.join('/')
+
+      const bibtexPath:string = normalizePath(joinedPath)
 
       const bibtexFile = this.plugin.app.vault.getAbstractFileByPath(bibtexPath);
 
@@ -490,7 +493,7 @@ export class ReferencesView extends ItemView {
     const attachmentAnnotations = Array.from(attachmentAnnotationsMap.values())
 
     const multiAnnotations = new MultiAnnotationsModal(this.app, attachmentAnnotations);
-    const fragment = await multiAnnotations.processContent();
+    const fragment = multiAnnotations.processContent();
 
     containerDiv.appendChild(fragment);
 
@@ -607,7 +610,7 @@ export class AnnotationsModal extends Modal {
     this.renderContent();
   };
 
-  async processContent() {
+  processContent() {
     const citekey = this._citekey;
     const itemData = this._data;
     const fragment = document.createDocumentFragment();
@@ -623,14 +626,14 @@ export class AnnotationsModal extends Modal {
 
   }
 
-  async renderContent() {
+  renderContent() {
     
     const fragment = document.createDocumentFragment();
 
     const containerDiv = fragment.createEl('div');
     containerDiv.classList.add('annotations-div');
     
-    const contentFragment = await this.processContent();
+    const contentFragment = this.processContent();
     
     containerDiv.appendChild(contentFragment)
 
@@ -670,8 +673,9 @@ export class AnnotationsModal extends Modal {
     else if (annotation.annotationType == 'image'){
       const annotationImage = annotationDiv.createEl("img", {cls: "annotation-img"});
       const pth = annotation.annotationImagePath;
-      const _img = "data:image/png;base64," + fs.readFileSync(pth).toString('base64');
-      annotationImage.src = _img;
+      const imgBase64 = "data:image/png;base64," + fs.readFileSync(pth).toString('base64');
+
+      annotationImage.src = imgBase64;
       const annotationSpan = annotationDiv.createEl("span", {text: annotation.annotationComment});
       let linkButton = annotationSpan.createEl("a", {cls: "annotation-link-icon", title: "Open in Zotero"});
       const annotationUri = this._parentUri + `?annotation=${annotation.key}`
@@ -709,15 +713,15 @@ export class MultiAnnotationsModal extends Modal {
     return citekeys;
   }
   
-  async processContent() {
+  processContent() {
     const fragment = document.createDocumentFragment();
 
     const containerDiv = fragment.createEl('div');
     containerDiv.classList.add('annotations-div');
-
+    
     for (const data of this._data) {
       const modal = new AnnotationsModal(this.app, data);
-      const annotationFragment = await modal.processContent();
+      const annotationFragment = modal.processContent();
       containerDiv.appendChild(annotationFragment)
     }
     
@@ -725,8 +729,8 @@ export class MultiAnnotationsModal extends Modal {
 
   }
 
-  async renderContent() {
-    const fragment = await this.processContent();
+  renderContent() {
+    const fragment = this.processContent();
     this.contentEl.appendChild(fragment);
   }
 
