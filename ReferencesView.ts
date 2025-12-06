@@ -180,7 +180,7 @@ export class ReferencesView extends ItemView {
 
   }
 
-  async setLoadingView() {
+  setLoadingView() {
 
     this.contentEl.empty();
     const containerDiv = this.contentEl.createDiv({cls:"container-div" });
