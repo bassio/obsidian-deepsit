@@ -616,7 +616,7 @@ export class AnnotationsModal extends Modal {
     fragment.createEl("div", { text: `${itemData.title}`, cls: 'item-annotations-header-item-title'  });
 
     for (const annotation of this._annotations) {
-      await this.renderAnnotation(fragment, annotation);
+      this.renderAnnotation(fragment, annotation);
     }
 
     return fragment;
@@ -642,7 +642,7 @@ export class AnnotationsModal extends Modal {
     fragment.createEl("p", "There are no annotations associated with this reference.");
   }
 
-  async renderAnnotation(fragment: DocumentFragment, annotation: object){
+  renderAnnotation(fragment: DocumentFragment, annotation: object){
 
     const annotationDiv = fragment.createDiv({cls: ["annotation-div", `annotation-${annotation.annotationType}`] });
 
