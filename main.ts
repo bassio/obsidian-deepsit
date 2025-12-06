@@ -80,11 +80,11 @@ export default class DeepSitPlugin extends Plugin {
 			}
 
 			if (this.settings.defaultViewMode == 'references'){
-				this.view?.renderReferences();
+				await this.view?.renderReferences();
 			} else if (this.settings.defaultViewMode == 'bibliography'){
-				this.view?.renderBibliography();
+				await this.view?.renderBibliography();
 			} else {
-				this.view?.renderReferences();
+				await this.view?.renderReferences();
 			}
 
 		}
