@@ -120,7 +120,7 @@ export class ReferencesView extends ItemView {
 
   }
 
-  async setViewContent(content: HTMLElement, bibliographyMode=false, annotationsView=false) {
+  setViewContent(content: HTMLElement, bibliographyMode=false, annotationsView=false) {
     this.contentEl.empty();
     const containerDiv = this.contentEl.createDiv({cls:"container-div" });
     const header = containerDiv.createDiv({cls:"references-header"});
@@ -414,7 +414,7 @@ export class ReferencesView extends ItemView {
       containerDiv.appendChild(element);
     });  
 
-    await this.setViewContent(containerDiv, false); // bibliographyMode=false
+    this.setViewContent(containerDiv, false); // bibliographyMode=false
 
     await this.renderAttachments(refs);
 
@@ -475,7 +475,7 @@ export class ReferencesView extends ItemView {
       containerDiv.appendChild(element);
     });
 
-    await this.setViewContent(containerDiv, true); // bibliographyMode=true
+    this.setViewContent(containerDiv, true); // bibliographyMode=true
 
     await this.renderAttachments(refs);
   
@@ -494,7 +494,7 @@ export class ReferencesView extends ItemView {
 
     containerDiv.appendChild(fragment);
 
-    await this.setViewContent(containerDiv, !bibliographyMode, true);
+    this.setViewContent(containerDiv, !bibliographyMode, true);
     
   };
 
