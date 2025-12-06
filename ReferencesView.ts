@@ -361,7 +361,7 @@ export class ReferencesView extends ItemView {
 
   async renderReferences() {
 
-    await this.setLoadingView();
+    this.setLoadingView();
 
     const refs = await this.processReferences();
     
@@ -422,7 +422,7 @@ export class ReferencesView extends ItemView {
 
   async renderBibliography() {
 
-    await this.setLoadingView();
+    this.setLoadingView();
 
     const refs = await this.processReferences();
     
