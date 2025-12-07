@@ -90,18 +90,19 @@ export async function locateCollection(collectionPath:string) {
     for (const cname of after.slice(1)) {
         if (matchedChildCollectionKey) {
             children = Object.values(allCollectionsDict).filter(c => c.parentCollection === matchedChildCollectionKey);
+
+            children.forEach(() => {
+        	    matchedChildCollectionKey = children.find(obj => { return obj.name === cname})?.key;
+            });
+
         } else {
             return { libraryId: null, collectionId: null };
         }
 
-        for (const child of children) {
-            
-			matchedChildCollectionKey = children.find(obj => { return obj.name === cname})?.key;
-
-        }
     }
 
     return { libraryId: matchedLibId, collectionId: matchedChildCollectionKey };
+
 }
 
 

@@ -76,10 +76,10 @@ export class ReferencesView extends ItemView {
       header.createEl("span", { text: 'Annotations', cls: "references-header-text" });
     }
     
-    const refreshButton = header.createEl("button", { text: "Refresh", cls: "refresh-button" , title: "Refresh"});
+    const refreshButton = header.createEl("button", {cls: "refresh-button" , title: "Refresh"});
     setIcon(refreshButton, "refresh-cw");
 
-    const modeButton = header.createEl("button", { text: "Switch References/Bibliography mode", cls: "mode-button", title: `Switch to ${oppositeMode} mode` });
+    const modeButton = header.createEl("button", {cls: "mode-button", title: `Switch to ${oppositeMode} mode` });
     setIcon(modeButton, "book-copy");
 
     const annotationsButton = header.createEl("button", { text: `${mode} Annotations`, cls: "annotations-button", title: `Annotations` });
@@ -136,10 +136,14 @@ export class ReferencesView extends ItemView {
   }
 
   setErrorView(error) {
+    
     this.contentEl.empty();
+    
     const containerDiv = this.contentEl.createDiv({cls:"container-div" });
+    
     const header = containerDiv.createDiv({cls:"references-header"});
-    const headerText = header.createEl("span", { text: "References", cls: "references-header-text" });
+    header.createEl("span", { text: "References", cls: "references-header-text" });
+    
     const refreshButton = header.createEl("button", { text: "Refresh", cls: "refresh-button" });
     setIcon(refreshButton, "refresh-cw");
     refreshButton.onclick = async () => {

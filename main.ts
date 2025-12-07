@@ -30,9 +30,11 @@ class DeepSitSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
+		const referencesViewModeDesc = `The default view mode for the References view. Options include "References mode" (default) and "Bibliography mode".`;
+
 		new Setting(containerEl)
 			.setName('References: default view mode')
-			.setDesc('The default view mode for the References view. Options include "References mode" (default) and "Bibliography mode".')
+			.setDesc(`${referencesViewModeDesc}`)
 			.addDropdown((dropdown) => {
 				dropdown
 				.addOption('references', "References mode")
@@ -43,10 +45,12 @@ class DeepSitSettingTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 			  				})
 			});
+		
+		const annotationsViewModeDesc = `The default view mode for the Annotations. Options include "Modal" (default) and "View pane".`;
 
 		new Setting(containerEl)
 			.setName('Annotations: default view mode')
-			.setDesc('The default view mode for the Annotations. Options include "Modal" (default) and "View pane".')
+			.setDesc(`${annotationsViewModeDesc}`)
 			.addDropdown((dropdown) => {
 				dropdown
 				.addOption('viewpane', 'View pane')

@@ -69,9 +69,10 @@ export class CitationSuggest extends EditorSuggest<Suggestion> {
 		const precedingChar = editor.getRange({line: startPos.line, ch: cursor.ch - 1},
 											  {line: startPos.line, ch: cursor.ch});
 
+		/*
 		const followingChar = editor.getRange({line: startPos.line, ch: cursor.ch},
 											  {line: startPos.line, ch: cursor.ch + 1});
-
+		*/
 
 		if (!OpenBracketToCursor.startsWith("@")) {
 			return null;
@@ -135,9 +136,11 @@ export class CitationSuggest extends EditorSuggest<Suggestion> {
 
 			const { editor } = this.context;
 
+			/*
 			const precedingChar = editor.getRange({line: this.context.start.line, ch: this.context.start.ch - 1},
 												  {line: this.context.start.line, ch: this.context.start.ch});
-	
+			*/
+			
 			const followingChar = editor.getRange({line: this.context.start.line, ch: this.context.end.ch},
 												  {line: this.context.start.line, ch: this.context.end.ch + 1});
 	
