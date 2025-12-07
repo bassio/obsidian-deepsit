@@ -29,7 +29,7 @@ export class ReferencesView extends ItemView {
     this.plugin = plugin;
     this._fileCollectionData = new Map()
     this.collectionAnnotationData = new Map()
-    this.contentEl.addClass('bibcite-references');
+    this.contentEl.addClass('deepsit-references');
     this.setEmptyView(this.plugin.settings.defaultViewMode == 'bibliography' ? true : false);
     this.addAction("refresh-cw", "Refresh References", async () => {
       await this.refreshReferences();
@@ -553,7 +553,7 @@ export class ReferencesView extends ItemView {
 
         let annotationsIcon = document.createElement("span");
         annotationsIcon.addClass("annotations-icon");
-        annotationsIcon.setAttribute("title", "Review Annotations");
+        annotationsIcon.setAttribute("title", "Annotations");
         setIcon(annotationsIcon, "book-open-text");
         annotationsIcon.onclick = (e) => {
           new AnnotationsModal(this.app, annotationsData).open();
@@ -673,8 +673,9 @@ export class AnnotationsModal extends Modal {
     else if (annotation.annotationType == 'image'){
       const annotationImage = annotationDiv.createEl("img", {cls: "annotation-img"});
       const pth = annotation.annotationImagePath;
+      
       const imgBase64 = "data:image/png;base64," + fs.readFileSync(pth).toString('base64');
-
+      
       annotationImage.src = imgBase64;
       const annotationSpan = annotationDiv.createEl("span", {text: annotation.annotationComment});
       let linkButton = annotationSpan.createEl("a", {cls: "annotation-link-icon", title: "Open in Zotero"});
