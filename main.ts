@@ -204,8 +204,13 @@ export default class DeepSitPlugin extends Plugin {
 	}
 
 	onunload() {
+		/*
+		Do not detach leaves with your custom view in onunload, this is an antipattern, see: https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines#Don't+detach+leaves+in+%60onunload%60
+
 		this.app.workspace.getLeavesOfType(ReferencesViewType)
 		.forEach((leaf) => leaf.detach());
+		*/
+		
 	}
 
 	async loadSettings() {
