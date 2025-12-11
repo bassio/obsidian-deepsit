@@ -1,206 +1,271 @@
+@scope (.workspace-leaf-content[data-type="ReferencesView"]) {
 
-.deepsit-references{
-    scrollbar-gutter: stable;
+    .deepsit-references{
+        scrollbar-gutter: stable;
+    }
+
+    span.loader-spinner {
+
+        /**
+        CSS class from: https://github.com/vineethtrv/css-loader
+
+        MIT License
+
+        Copyright (c) 2020 Vineeth.TR
+
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        **/
+
+        width: 48px;
+        height: 48px;
+        border: 5px solid var(--text-muted);
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: rotation 0.7s linear infinite;
+        }
+
+        @keyframes rotation {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .deepsit-container-div .references-header{
+        white-space: nowrap;
+        display: table;
+        width: 100%;
+    }
+
+    .deepsit-container-div .references-header .references-header-text{
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        font-size: var(--font-adaptive-small);
+        height: 100%;
+        text-align: left;
+        white-space: nowrap;
+        display: table-cell;
+        vertical-align: middle;
+    }   
+
+    .deepsit-container-div .references-header button {
+        --icon-size: var(--icon-xs);
+        padding: 8px;
+        vertical-align: middle;
+    }
+
+    .deepsit-container-div .references-header .refresh-button{
+        float: right;
+        margin-left: 2px;
+    }
+
+    .deepsit-container-div .references-header .mode-button{
+        float: right;
+        margin: 0px 2px;
+    }
+
+    .deepsit-container-div .references-header .annotations-button{
+        float: right;
+        margin: 0px 2px;
+    }
+
+    .deepsit-container-div .pane-empty {
+        margin-top: 30px;
+    }
+
+    .deepsit-references-div, .deepsit-bibliography-div, .deepsit-annotations-div {
+        user-select: text;
+        margin-block-start: var(--p-spacing);
+    }
+
+    .deepsit-references-div .reference-div .reference-citekey{
+        color: var(--text-normal);
+    }
+    .deepsit-bibliography-div .reference-div .reference-citekey{
+        color: var(--text-muted);
+    }
+
+    .deepsit-references-div .reference-div,    
+    .deepsit-bibliography-div .reference-div{
+        margin-top: 11px;
+        margin-bottom: 13px;
+        font-size: small;
+    }
+
+    .deepsit-references-div .reference-div .annotations-icon,
+    .deepsit-bibliography-div .reference-div .annotations-icon{
+        cursor: pointer;
+        --icon-size: var(--icon-xs);
+        padding-left: var(--icon-xs-stroke-width);
+        vertical-align: middle;
+    }
+
+    .deepsit-references-div .reference-div .reference-citekey,
+    .deepsit-bibliography-div .reference-div .reference-citekey{
+        font-weight: bold;
+    }
+
+    .deepsit-references-div .reference-div .reference-title,
+    .deepsit-bibliography-div .reference-div .reference-title{
+        padding-top: var(--size-4-1);
+    }
+
+    .deepsit-references-div .reference-div .reference-title a[href='#0'],
+    .deepsit-bibliography-div .reference-div .reference-title a[href='#0']{
+        color: var(--text-normal);
+        cursor: inherit;
+        text-decoration: inherit;
+    }
+
+    .deepsit-references-div div.reference-div .reference-journal,
+    .deepsit-bibliography-div div.reference-div .reference-journal{
+        color: var(--text-muted);
+        font-size: var(--font-ui-smaller);
+        padding-top: var(--size-4-1);
+        line-height: var(--line-height-tight);
+        font-style: italic;
+    }
+
 }
 
-.container-div .references-header{
-    white-space: nowrap;
-    display: table;
-    width: 100%;
+@scope (.workspace-leaf-content[data-type="ReferencesView"], div.modal-container) {
+
+    .deepsit-annotations-div { /* zotero annotation highlight colours */
+        --highlight-yellow : #ffd400;
+        --highlight-red: #ff6666;
+        --highlight-green: #5fb236;
+        --highlight-blue: #2ea8e5;
+        --highlight-purple: #a28ae5;
+        --highlight-magenta: #e56eee;
+        --highlight-orange: #f19837;
+        --highlight-gray: #aaaaaa;
+    }
+
+    .deepsit-annotations-div .item-annotations-header {
+        /* font-variant: var(--h6-variant); */
+        letter-spacing: -0.015em;
+        line-height: var(--h6-line-height);
+        font-size: var(--font-adaptive-smaller);
+        color: var(--h6-color);
+        font-weight: bold;
+        font-style: var(--h6-style);
+        font-family: var(--h6-font);
+        margin-block-start: var(--p-spacing);
+    }
+
+    .deepsit-annotations-div .item-annotations-header-item-title{
+        font-variant: var(--h6-variant);
+        letter-spacing: 0.015em;
+        font-size: var(--font-adaptive-smallest);
+        color: var(--h6-color);
+        font-weight: var(--h6-weight);
+        font-style: var(--h6-style);
+        font-family: var(--h6-font);
+        margin-block-end: var(--p-spacing);    
+    }
+
+
+    .deepsit-annotations-div .annotation-highlight {
+        font-size: var(--font-ui-smaller);
+    }
+
+    .deepsit-annotations-div .annotation-link-icon,
+    .deepsit-annotations-div .annotation-copy-icon  {
+        --icon-size: var(--icon-xs);
+        color: var(--text-normal);
+        padding-left: var(--icon-xs-stroke-width);
+        padding-right: var(--icon-xs-stroke-width);
+        vertical-align: middle;
+    }
+
+    .deepsit-annotations-div .annotation-image {
+        text-align: center;
+        font-size: var(--font-ui-small);
+    }
+
+    .deepsit-annotations-div .annotation-image img.annotation-img {
+        display: block;
+        margin: auto;
+        width: 80%;
+    }
+
+    .deepsit-annotations-div .annotation-highlight .highlight-yellow,
+    .deepsit-annotations-div .annotation-highlight .highlight-ffd400 {
+        background-color: var(--highlight-yellow);
+    }
+
+    .deepsit-annotations-div .annotation-highlight .highlight-red,
+    .deepsit-annotations-div .annotation-highlight .highlight-ff6666 {
+        background-color: var(--highlight-red);
+    }
+
+    .deepsit-annotations-div .annotation-highlight .highlight-green,
+    .deepsit-annotations-div .annotation-highlight .highlight-5fb236 {
+        background-color: var(--highlight-green);
+    }
+
+    .deepsit-annotations-div .annotation-highlight .highlight-blue,
+    .deepsit-annotations-div .annotation-highlight .highlight-2ea8e5 {
+        background-color: var(--highlight-blue);
+    }
+
+    .deepsit-annotations-div .annotation-highlight .highlight-purple,
+    .deepsit-annotations-div .annotation-highlight .highlight-a28ae5 {
+        background-color: var(--highlight-purple);
+    }
+
+    .deepsit-annotations-div .annotation-highlight .highlight-magenta,
+    .deepsit-annotations-div .annotation-highlight .highlight-e56eee {
+        background-color: var(--highlight-magenta);
+    }
+
+    .deepsit-annotations-div .annotation-highlight .highlight-orange,
+    .deepsit-annotations-div .annotation-highlight .highlight-f19837 {
+        background-color: var(--highlight-orange);
+    }
+
+    .deepsit-annotations-div .annotation-highlight .highlight-gray,
+    .deepsit-annotations-div .annotation-highlight .highlight-aaaaaa {
+        background-color: var(--highlight-gray);
+    }
+
+
 }
 
-.container-div .references-header .references-header-text{
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    font-size: var(--font-adaptive-small);
-    height: 100%;
-    text-align: left;
-    white-space: nowrap;
-    display: table-cell;
-    vertical-align: middle;
-}   
+@scope (div.workspace-leaf-content[data-type="markdown"]) {
 
-.container-div .references-header button {
-    --icon-size: var(--icon-xs);
-    padding: 8px;
-    vertical-align: middle;
-}
+    div.deepsit-references-widget {
+        font-size: var(--font-ui-small);
+        color: var(--text-muted);
+        padding: var(--embed-padding);
+        border-inline-start: var(--embed-border-start)
+    }
 
-.container-div .references-header .refresh-button{
-    float: right;
-    margin-left: 2px;
-}
+    div.deepsit-references-reading {
+        font-size: var(--font-ui-small);
+        color: var(--text-muted);
+        
+    }
 
-.container-div .references-header .mode-button{
-    float: right;
-    margin: 0px 2px;
-}
-
-.container-div .references-header .annotations-button{
-    float: right;
-    margin: 0px 2px;
-}
-
-.container-div .pane-empty {
-    margin-top: 30px;
-}
-
-.references-div, .bibliography-div, .annotations-div {
-    user-select: text;
-    margin-block-start: var(--p-spacing);
-}
-
-.references-div .reference-div .reference-citekey{
-    color: var(--text-normal);
-}
-.bibliography-div .reference-div .reference-citekey{
-    color: var(--text-muted);
-}
-
-.reference-div{
-    margin-top: 11px;
-    margin-bottom: 13px;
-    font-size: small;
-}
-
-.reference-div .annotations-icon{
-    cursor: pointer;
-    --icon-size: var(--icon-xs);
-    padding-left: var(--icon-xs-stroke-width);
-    vertical-align: middle;
-}
-
-.reference-div .reference-citekey{
-    font-weight: bold;
-}
-
-.reference-div .reference-title{
-    padding-top: var(--size-4-1);
-}
-
-.reference-div .reference-title a[href='#0']{
-    color: var(--text-normal);
-    cursor: inherit;
-    text-decoration: inherit;
-}
-
-.reference-div .reference-journal{
-    color: var(--text-muted);
-    font-size: var(--font-ui-smaller);
-    padding-top: var(--size-4-1);
-    line-height: var(--line-height-tight);
-    font-style: italic;
-}
-
-.annotations-div { /* zotero annotation highlight colours */
-    --highlight-yellow : #ffd400;
-    --highlight-red: #ff6666;
-    --highlight-green: #5fb236;
-    --highlight-blue: #2ea8e5;
-    --highlight-purple: #a28ae5;
-    --highlight-magenta: #e56eee;
-    --highlight-orange: #f19837;
-    --highlight-gray: #aaaaaa;
-}
-
-.annotations-div .item-annotations-header {
-    /* font-variant: var(--h6-variant); */
-    letter-spacing: -0.015em;
-    line-height: var(--h6-line-height);
-    font-size: var(--font-adaptive-smaller);
-    color: var(--h6-color);
-    font-weight: bold;
-    font-style: var(--h6-style);
-    font-family: var(--h6-font);
-    margin-block-start: var(--p-spacing);
-}
-
-.annotations-div .item-annotations-header-item-title{
-    font-variant: var(--h6-variant);
-    letter-spacing: 0.015em;
-    font-size: var(--font-adaptive-smallest);
-    color: var(--h6-color);
-    font-weight: var(--h6-weight);
-    font-style: var(--h6-style);
-    font-family: var(--h6-font);
-    margin-block-end: var(--p-spacing);    
-}
-
-
-.annotations-div .annotation-highlight {
-    font-size: var(--font-ui-smaller);
-}
-
-.annotations-div .annotation-link-icon,
-.annotations-div .annotation-copy-icon  {
-    --icon-size: var(--icon-xs);
-    color: var(--text-normal);
-    padding-left: var(--icon-xs-stroke-width);
-    padding-right: var(--icon-xs-stroke-width);
-    vertical-align: middle;
-}
-
-.annotations-div .annotation-image {
-    text-align: center;
-    font-size: var(--font-ui-small);
-}
-
-.annotations-div .annotation-image img.annotation-img {
-    display: block;
-    margin: auto;
-    width: 80%;
-}
-
-.annotation-highlight .highlight-yellow,
-.annotation-highlight .highlight-ffd400 {
-    background-color: var(--highlight-yellow);
-}
-
-.annotation-highlight .highlight-red,
-.annotation-highlight .highlight-ff6666 {
-    background-color: var(--highlight-red);
-}
-
-.annotation-highlight .highlight-green,
-.annotation-highlight .highlight-5fb236 {
-    background-color: var(--highlight-green);
-}
-
-.annotations-div .highlight-blue,
-.annotations-div .highlight-2ea8e5 {
-    background-color: var(--highlight-blue);
-}
-
-.annotations-div .highlight-purple,
-.annotations-div .highlight-a28ae5 {
-    background-color: var(--highlight-purple);
-}
-
-.annotations-div .highlight-magenta,
-.annotations-div .highlight-e56eee {
-    background-color: var(--highlight-magenta);
-}
-
-.annotations-div .highlight-orange,
-.annotations-div .highlight-f19837 {
-    background-color: var(--highlight-orange);
-}
-
-.annotations-div .highlight-gray,
-.annotations-div .highlight-aaaaaa {
-    background-color: var(--highlight-gray);
-}
-
-div.references-widget {
-    font-size: var(--font-ui-small);
-    color: var(--text-muted);
-    padding: var(--embed-padding);
-    border-inline-start: var(--embed-border-start)
-}
-
-div.references-reading {
-    font-size: var(--font-ui-small);
-    color: var(--text-muted);
-    
 }

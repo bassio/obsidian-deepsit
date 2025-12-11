@@ -21,7 +21,6 @@ export class ReferencesView extends ItemView {
   references: [];
   private _fileCollectionData: Map<string, CollectionData>;
   collectionAnnotationData: CollectionAnnotationsMap;
-  loadingSpinnerAsset:string;
   private _activeViewMode:string
 
   constructor(leaf: WorkspaceLeaf, plugin: BibcitePlugin) {
@@ -31,20 +30,11 @@ export class ReferencesView extends ItemView {
     this.collectionAnnotationData = new Map()
     this.contentEl.addClass('deepsit-references');
     this.setEmptyView(this.plugin.settings.defaultViewMode == 'bibliography' ? true : false);
-    this.addAction("refresh-cw", "Refresh References", async () => {
+    
+    this.addAction("refresh-cw", "Refresh", async () => {
       await this.refreshReferences();
-    })
-    
-    const vault = this.plugin.app.vault;
-    const adapter = vault.adapter;
-    const assetFileName = "spinner.svg";
-
-    const paths = [this.plugin.manifest.dir, assetFileName]
-    const joinedPath = paths.join('/')
-    const assetPath = normalizePath(joinedPath);
-    
-    this.loadingSpinnerAsset = adapter.getResourcePath(assetPath);
-    
+    });
+            
   }
 
   get activeFilePath():string {
@@ -123,7 +113,7 @@ export class ReferencesView extends ItemView {
 
   setViewContent(content: HTMLElement, bibliographyMode=false, annotationsView=false) {
     this.contentEl.empty();
-    const containerDiv = this.contentEl.createDiv({cls:"container-div" });
+    const containerDiv = this.contentEl.createDiv({cls:"deepsit-container-div" });
     const header = containerDiv.createDiv({cls:"references-header"});
 
     this.setHeader(header, bibliographyMode, annotationsView);
@@ -139,7 +129,7 @@ export class ReferencesView extends ItemView {
     
     this.contentEl.empty();
     
-    const containerDiv = this.contentEl.createDiv({cls:"container-div" });
+    const containerDiv = this.contentEl.createDiv({cls:"deepsit-container-div" });
     
     const header = containerDiv.createDiv({cls:"references-header"});
     header.createEl("span", { text: "References", cls: "references-header-text" });
@@ -166,7 +156,7 @@ export class ReferencesView extends ItemView {
 
   setEmptyView(bibliographyMode=false) {
     this.contentEl.empty();
-    const containerDiv = this.contentEl.createDiv({cls:"container-div" });
+    const containerDiv = this.contentEl.createDiv({cls:"deepsit-container-div" });
     const header = containerDiv.createDiv({cls:"references-header"});
 
     this.setHeader(header, bibliographyMode);
@@ -188,16 +178,18 @@ export class ReferencesView extends ItemView {
   setLoadingView() {
 
     this.contentEl.empty();
-    const containerDiv = this.contentEl.createDiv({cls:"container-div" });
+    const containerDiv = this.contentEl.createDiv({cls:"deepsit-container-div" });
     const header = containerDiv.createDiv({cls:"references-header"});
 
     this.setHeader(header, false);
 
-    //emptyDiv
+    //emptyDiv with loading spinner
     containerDiv.createDiv({
       cls: 'pane-empty',
-      text: containerDiv.createEl("img", { attr: { src: this.loadingSpinnerAsset }})
+      text: containerDiv.createEl("span", {cls: "loader-spinner"})
     });
+
+    
 
 
   }
@@ -382,7 +374,7 @@ export class ReferencesView extends ItemView {
     }
 
     const containerDiv = document.createElement('div');
-    containerDiv.classList.add('references-div');
+    containerDiv.classList.add('deepsit-references-div');
     
     let itemsDiv:string = ``;
 
@@ -408,18 +400,13 @@ export class ReferencesView extends ItemView {
       }
 
 
-      itemsDiv += `<div class='reference-div'>
-                    <div class="reference-citekey" data-citekey="${itemData['id']}">@${itemData['id']}</div>
-                    <div class="reference-title"><a data-citekey="${itemData['id']}" href='#0'>${itemData['title']}</a></div>
-                    <div class="reference-journal">${journal} ${issueDate}</div>
-                  </div>`;
+      const itemDiv = containerDiv.createDiv({cls: 'reference-div'});
+      itemDiv.createDiv({cls:"reference-citekey", attr:{'data-citekey': itemData['id']}, text: `@${itemData['id']}`});
+      itemDiv.createDiv({cls:"reference-title"}).createEl('a', {attr:{'data-citekey': itemData['id']}, href:'#0', text: itemData['title']});
+      itemDiv.createDiv({cls:"reference-journal", text: `${journal} ${issueDate}`});
       
     }
   
-    const itemsDivNode = new DOMParser().parseFromString(itemsDiv, 'text/html');
-    Array.from(itemsDivNode.body.children).forEach(element => {
-      containerDiv.appendChild(element);
-    });  
 
     this.setViewContent(containerDiv, false); // bibliographyMode=false
 
@@ -443,7 +430,7 @@ export class ReferencesView extends ItemView {
     }
 
     const containerDiv = document.createElement('div');
-    containerDiv.classList.add('references-div');
+    containerDiv.classList.add('deepsit-references-div');
     
     let itemsDiv:string = ``;
 
@@ -469,18 +456,13 @@ export class ReferencesView extends ItemView {
       }
 
 
-      itemsDiv += `<div class='reference-div'>
-                    <div class="reference-citekey" data-citekey="${itemData['id']}">@${itemData['id']}</div>
-                    <div class="reference-title"><a data-citekey="${itemData['id']}" href='#0'>${itemData['title']}</a></div>
-                    <div class="reference-journal">${journal} ${issueDate}</div>
-                  </div>`;
+      const itemDiv = containerDiv.createDiv({cls: 'reference-div'});
+      itemDiv.createDiv({cls:"reference-citekey", attr:{'data-citekey': itemData['id']}, text: `@${itemData['id']}`});
+      itemDiv.createDiv({cls:"reference-title"}).createEl('a', {attr:{'data-citekey': itemData['id']}, href:'#0', text: itemData['title']});
+      itemDiv.createDiv({cls:"reference-journal", text: `${journal} ${issueDate}`});
+
 
     }
-  
-    const itemsDivNode = new DOMParser().parseFromString(itemsDiv, 'text/html');
-    Array.from(itemsDivNode.body.children).forEach(element => {
-      containerDiv.appendChild(element);
-    });
 
     this.setViewContent(containerDiv, true); // bibliographyMode=true
 
@@ -540,7 +522,7 @@ export class ReferencesView extends ItemView {
   async renderAttachments(collectionData:CollectionData) {
 
     const containerDiv = document.createElement('div');
-    containerDiv.classList.add('references-div');
+    containerDiv.classList.add('deepsit-references-div');
 
     const itemAnnotations:ItemAnnotationsMap = await this.processAttachmentsAnnotations(collectionData);
 
@@ -635,7 +617,7 @@ export class AnnotationsModal extends Modal {
     const fragment = document.createDocumentFragment();
 
     const containerDiv = fragment.createEl('div');
-    containerDiv.classList.add('annotations-div');
+    containerDiv.classList.add('deepsit-annotations-div');
     
     const contentFragment = this.processContent();
     
@@ -722,7 +704,7 @@ export class MultiAnnotationsModal extends Modal {
     const fragment = document.createDocumentFragment();
 
     const containerDiv = fragment.createEl('div');
-    containerDiv.classList.add('annotations-div');
+    containerDiv.classList.add('deepsit-annotations-div');
     
     for (const data of this._data) {
       const modal = new AnnotationsModal(this.app, data);

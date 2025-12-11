@@ -1,4 +1,4 @@
-import { App, Plugin, PluginSettingTab, requireApiVersion, Setting, WorkspaceLeaf } from 'obsidian';
+import { App, Plugin, PluginSettingTab, requireApiVersion, Setting, TFile, WorkspaceLeaf } from 'obsidian';
 
 
 import { CitationSuggest } from "CitationSuggest";
@@ -103,7 +103,12 @@ export default class DeepSitPlugin extends Plugin {
 		this.registerView(ReferencesViewType,
 						 (leaf: WorkspaceLeaf) => new ReferencesView(leaf, this)
 						  );
+		
+		/*
+		Removed below
 
+		Comment from @Zachatoo:  This command should also reveal the leaf if it exists, to match how other Obsidian commands work.
+		
 		this.addCommand({
 			id: 'show-references-view',
 			name: 'Show references',
@@ -112,25 +117,20 @@ export default class DeepSitPlugin extends Plugin {
 			},
 		});
 
+		*/
 
-		this.registerEvent(this.app.workspace.on('active-leaf-change', async (leaf:WorkspaceLeaf) => {
-			const activeFile = this.app.workspace.getActiveFile();
-			if (!activeFile){
+		this.registerEvent(this.app.workspace.on('file-open', async (file:TFile|null) => {
+			
+			//const activeFile = this.app.workspace.getActiveFile();
+			
+			if (!file){
 				await this.setActiveFilePath("");
 			} else {
-				await this.setActiveFilePath(activeFile.path);
+				await this.setActiveFilePath(file.path);
 			}
+
 		}));
-		
-		this.registerEvent(this.app.workspace.on('layout-change', async (leaf:WorkspaceLeaf) => {
-			const activeFile = this.app.workspace.getActiveFile();
-			if (!activeFile){
-				await this.setActiveFilePath("");
-			} else if (activeFile.path != this.activeFilePath) {
-				await this.setActiveFilePath(activeFile.path);
-			}
-		}));
-		
+
 		this.registerEvent(this.app.workspace.on('editor-menu', (menu, editor) => {
 			menu.addItem(item => {
 							item.setTitle('Referencing');
@@ -183,7 +183,7 @@ export default class DeepSitPlugin extends Plugin {
 							}
 							const biblio:string = await view.generateBibliography(refs.citations, library, style, 'text')
 							element.innerText = biblio;
-							element.className = "references-reading";
+							element.className = "deepsit-references-reading";
 						}
 
 					}
@@ -219,7 +219,10 @@ export default class DeepSitPlugin extends Plugin {
 	get view() {
 		const leaves = this.app.workspace.getLeavesOfType(ReferencesViewType);
 		if (!leaves?.length) return null;
-		return leaves[0].view as ReferencesView;
+
+		if (leaves[0].view instanceof ReferencesView) {
+			return leaves[0].view;
+		}
 	}
 
 	async initLeaf() {

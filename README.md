@@ -110,4 +110,4 @@ As of October 2025, this plugin does *not* contain:
 ## Acknowledgements
 
 - Emiliano Heyns for the excellent Zotero Better BibTeX plugin. (https://retorque.re/zotero-better-bibtex/index.html)
-- SVG only spinner obtained from https://github.com/n3r4zzurr0/svg-spinners (MIT © Utkarsh Verma).
+- CSS only spinner obtained from https://github.com/vineethtrv/css-loader (MIT © 2020 Vineeth.TR).
