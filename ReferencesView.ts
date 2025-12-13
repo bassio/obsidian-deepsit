@@ -1,7 +1,5 @@
 
-import * as fs from 'fs'
-
-import { App, ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath } from 'obsidian';
+import { App, ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath, FileSystemAdapter } from 'obsidian';
 
 import BibcitePlugin from 'main';
 
@@ -657,12 +655,24 @@ export class AnnotationsModal extends Modal {
 
     }
     else if (annotation.annotationType == 'image'){
-      const annotationImage = annotationDiv.createEl("img", {cls: "annotation-img"});
-      const pth = annotation.annotationImagePath;
+
+      const va = this.app.vault.adapter;
       
-      const imgBase64 = "data:image/png;base64," + fs.readFileSync(pth).toString('base64');
-      
-      annotationImage.src = imgBase64;
+      if (va instanceof FileSystemAdapter){
+        const annotationImage = annotationDiv.createEl("img", {cls: "annotation-img"});
+        const pth = annotation.annotationImagePath;
+        
+        const relativePth = va.path.relative(va.basePath, pth);
+        const resourcePth = va.getResourcePath(relativePth);
+
+        annotationImage.src = resourcePth;
+
+      }
+      else {
+        const annotationImage = annotationDiv.createEl("span", {cls: "annotation-img" , title: "Annotation image not available on mobile."});
+        setIcon(annotationImage, "image-off");
+      }
+
       const annotationSpan = annotationDiv.createEl("span", {text: annotation.annotationComment});
       let linkButton = annotationSpan.createEl("a", {cls: "annotation-link-icon", title: "Open in Zotero"});
       const annotationUri = this._parentUri + `?annotation=${annotation.key}`
