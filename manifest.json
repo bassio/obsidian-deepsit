@@ -1,8 +1,8 @@
 {
 	"id": "deep-sit",
 	"name": "Deep Sit",
-	"version": "0.2.1",
-	"minAppVersion": "0.15.0",
+	"version": "0.2.2",
+	"minAppVersion": "1.10.6",
 	"description": "Focused study and research tool that allows citing and reviewing primary sources through a Zotero integration.",
 	"author": "Ahmed Bassiouni",
 	"authorUrl": "https://github.com/bassio",
