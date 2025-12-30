@@ -31,6 +31,12 @@ Deep Sit is an Obsidian plugin that allows you to easily cite and refer to the l
 
 ## Installation
 
+### Installation through Obsidian's official Community plugins channel (Recommended)
+
+Deep Sit has been accepted to Obsidian's official Community plugins channel in December 2025.
+
+Please install according to the Obsidian Help documentation: https://help.obsidian.md/community-plugins
+
 ### Manual installation
 
 - Go to the Releases page of the plugin https://github.com/bassio/obsidian-deepsit/releases and choose a release to download.
@@ -43,12 +49,6 @@ Deep Sit is an Obsidian plugin that allows you to easily cite and refer to the l
 - Another option for installation is to trial the the Beta Reviewers Auto-update Tester (BRAT) plugin (https://github.com/TfTHacker/obsidian42-brat), which is available through the Obsidian Community plugins and enable it.
 - Go to the BRAT plugin settings and select the Add beta plugin button.
 - Add Deep Sit via pasting its repository link: https://github.com/bassio/obsidian-deepsit and click the Add Plugin button.
-
-### Installation through Obsidian's official Community plugins channel (Pending review)
-
-Deep Sit has been submitted to the Community plugins as of 6th of October 2025 and is awaiting review.
-
-Pull request: https://github.com/obsidianmd/obsidian-releases/pull/8050
 
 
 ## Use case
@@ -113,3 +113,4 @@ As of October 2025, this plugin does *not* contain:
 
 - Emiliano Heyns for the excellent Zotero Better BibTeX plugin. (https://retorque.re/zotero-better-bibtex/index.html)
 - CSS only spinner obtained from https://github.com/vineethtrv/css-loader (MIT © 2020 Vineeth.TR).
+- Flexoki colour scheme (MIT © Steph Ango; https://stephango.com/flexoki)
