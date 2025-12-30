@@ -9,11 +9,13 @@ import {ReferencesRendererViewPlugin, ReferencesStateField} from 'EditorExtensio
 interface DeepSitPluginSettings {
 	defaultViewMode: string;
 	defaultAnnotationsMode: string;
+	defaultAnnotationHighlight: string;
 }
 
 const DEFAULT_SETTINGS:DeepSitPluginSettings = {
 	defaultViewMode: 'references',
-	defaultAnnotationsMode: 'viewpane'
+	defaultAnnotationsMode: 'viewpane',
+	defaultAnnotationHighlight: 'background'
 }
 
 
@@ -30,7 +32,7 @@ class DeepSitSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		const referencesViewModeDesc = `The default view mode for the References view. Options include "References mode" (default) and "Bibliography mode".`;
+		const referencesViewModeDesc = `Default view mode for the References view. Options include "References mode" (default) and "Bibliography mode".`;
 
 		new Setting(containerEl)
 			.setName('References: default view mode')
@@ -46,7 +48,7 @@ class DeepSitSettingTab extends PluginSettingTab {
 			  				})
 			});
 		
-		const annotationsViewModeDesc = `The default view mode for the Annotations. Options include "Modal" (default) and "View pane".`;
+		const annotationsViewModeDesc = `Default view mode for the Annotations. Options include "View pane" (default) and "Modal".`;
 
 		new Setting(containerEl)
 			.setName('Annotations: default view mode')
@@ -61,7 +63,23 @@ class DeepSitSettingTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 							})
 			});
-			  
+		
+		const annotationsHighlightModeDesc = `View mode for annotation highlights. Options include "background" highlights (default) and "side margin" highlights.`;
+
+		new Setting(containerEl)
+			.setName('Annotation highlights view mode')
+			.setDesc(`${annotationsHighlightModeDesc}`)
+			.addDropdown((dropdown) => {
+				dropdown
+				.addOption('background', "Background highlight colour")
+				.addOption('sidemargin', "Side margin highlight colour")
+				.setValue(this.plugin.settings.defaultAnnotationHighlight)
+				.onChange(async (value) => {
+							this.plugin.settings.defaultAnnotationHighlight = value;
+							await this.plugin.saveSettings();
+							})
+			});
+
 	}
 	
 }

@@ -152,14 +152,14 @@
 @scope (.workspace-leaf-content[data-type="ReferencesView"], div.modal-container) {
 
     .deepsit-annotations-div { /* zotero annotation highlight colours */
-        --highlight-yellow : #ffd400;
-        --highlight-red: #ff6666;
-        --highlight-green: #5fb236;
-        --highlight-blue: #2ea8e5;
-        --highlight-purple: #a28ae5;
-        --highlight-magenta: #e56eee;
-        --highlight-orange: #f19837;
-        --highlight-gray: #aaaaaa;
+        --highlight-yellow : #FFEE99; /* #ffd400 */
+        --highlight-red: #FFC2C2; /* #ff6666 */
+        --highlight-green: #BFE0AF; /* #5fb236 */
+        --highlight-blue: #ABDCF5; /* #2ea8e5 */
+        --highlight-purple: #DAD0F5; /* #a28ae5 */
+        --highlight-magenta: #F5C5F8; /* #e56eee */
+        --highlight-orange: #F9D6AF; /* #f19837 */
+        --highlight-gray: #DDDDDD; /* #aaaaaa */
     }
 
     .deepsit-annotations-div .item-annotations-header {
@@ -182,12 +182,19 @@
         font-weight: var(--h6-weight);
         font-style: var(--h6-style);
         font-family: var(--h6-font);
-        margin-block-end: var(--p-spacing);    
+    }
+
+    .deepsit-annotations-div .annotation-image {
+        text-align: center;
+        font-size: var(--font-ui-small);
+        margin: 10px 0 10px 0;
     }
 
 
-    .deepsit-annotations-div .annotation-highlight {
-        font-size: var(--font-ui-smaller);
+    .deepsit-annotations-div .annotation-image img.annotation-img {
+        display: block;
+        margin: auto;
+        width: 80%;
     }
 
     .deepsit-annotations-div .annotation-link-icon,
@@ -199,55 +206,99 @@
         vertical-align: middle;
     }
 
-    .deepsit-annotations-div .annotation-image {
-        text-align: center;
-        font-size: var(--font-ui-small);
+    .deepsit-annotations-div .annotation-highlight {
+        font-size: var(--font-ui-smaller);
+        line-height: 1.5em;
+        margin: 10px 0 10px 0;
+        padding-left: 5px;
     }
 
-    .deepsit-annotations-div .annotation-image img.annotation-img {
-        display: block;
-        margin: auto;
-        width: 80%;
+    .deepsit-annotations-div .annotation-highlight:has(.highlight-sidemargin-ffd400) {
+        border-left: 3px solid var(--highlight-yellow);
+        padding-left: 10px;
+    }
+
+    .deepsit-annotations-div .annotation-highlight:has(.highlight-sidemargin-ff6666) {
+        border-left: 3px solid var(--highlight-red);
+        padding-left: 10px;
+    }
+
+    .deepsit-annotations-div .annotation-highlight:has(.highlight-sidemargin-5fb236) {
+        border-left: 3px solid var(--highlight-green);
+        padding-left: 10px;
+    }
+
+    .deepsit-annotations-div .annotation-highlight:has(.highlight-sidemargin-2ea8e5) {
+        border-left: 3px solid var(--highlight-blue);
+        padding-left: 10px;
+    }
+
+    .deepsit-annotations-div .annotation-highlight:has(.highlight-sidemargin-a28ae5) {
+        border-left: 3px solid var(--highlight-purple);
+        padding-left: 10px;
+    }
+
+    .deepsit-annotations-div .annotation-highlight:has(.highlight-sidemargin-e56eee) {
+        border-left: 3px solid var(--highlight-magenta);
+        padding-left: 10px;
+    }
+
+    .deepsit-annotations-div .annotation-highlight:has(.highlight-sidemargin-f19837) {
+        border-left: 3px solid var(--highlight-orange);
+        padding-left: 10px;
+    }
+
+    .deepsit-annotations-div .annotation-highlight:has(.highlight-sidemargin-aaaaaa) {
+        border-left: 3px solid var(--highlight-gray);
+        padding-left: 10px;
     }
 
     .deepsit-annotations-div .annotation-highlight .highlight-yellow,
     .deepsit-annotations-div .annotation-highlight .highlight-ffd400 {
         background-color: var(--highlight-yellow);
+        color: var(--text-on-accent-inverted);
     }
 
     .deepsit-annotations-div .annotation-highlight .highlight-red,
     .deepsit-annotations-div .annotation-highlight .highlight-ff6666 {
         background-color: var(--highlight-red);
+        color: var(--text-on-accent-inverted);
     }
 
     .deepsit-annotations-div .annotation-highlight .highlight-green,
     .deepsit-annotations-div .annotation-highlight .highlight-5fb236 {
         background-color: var(--highlight-green);
+        color: var(--text-on-accent-inverted);
     }
 
     .deepsit-annotations-div .annotation-highlight .highlight-blue,
     .deepsit-annotations-div .annotation-highlight .highlight-2ea8e5 {
         background-color: var(--highlight-blue);
+        color: var(--text-on-accent-inverted);
     }
 
     .deepsit-annotations-div .annotation-highlight .highlight-purple,
     .deepsit-annotations-div .annotation-highlight .highlight-a28ae5 {
         background-color: var(--highlight-purple);
+        color: var(--text-on-accent-inverted);
     }
 
     .deepsit-annotations-div .annotation-highlight .highlight-magenta,
     .deepsit-annotations-div .annotation-highlight .highlight-e56eee {
         background-color: var(--highlight-magenta);
+        color: var(--text-on-accent-inverted);
     }
 
     .deepsit-annotations-div .annotation-highlight .highlight-orange,
     .deepsit-annotations-div .annotation-highlight .highlight-f19837 {
         background-color: var(--highlight-orange);
+        color: var(--text-on-accent-inverted);
     }
 
     .deepsit-annotations-div .annotation-highlight .highlight-gray,
     .deepsit-annotations-div .annotation-highlight .highlight-aaaaaa {
         background-color: var(--highlight-gray);
+        color: var(--text-on-accent-inverted);
     }
 
 

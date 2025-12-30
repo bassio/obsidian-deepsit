@@ -1,7 +1,7 @@
 
 import { App, ItemView, MarkdownView, WorkspaceLeaf, Modal, Notice, setIcon, normalizePath, FileSystemAdapter } from 'obsidian';
 
-import BibcitePlugin from 'main';
+import DeepSitPlugin from 'main';
 
 import {FrontMatterBibliographyString} from "FrontMatter"
 import { bibliography, exportItems, exportItemsNonJSON } from 'ZoteroFunctions';
@@ -14,14 +14,14 @@ export const ReferencesViewType = 'ReferencesView';
 
 
 export class ReferencesView extends ItemView {
-  plugin: BibcitePlugin;
+  plugin: DeepSitPlugin;
   activeMarkdownLeaf: MarkdownView;
   references: [];
   private _fileCollectionData: Map<string, CollectionData>;
   collectionAnnotationData: CollectionAnnotationsMap;
   private _activeViewMode:string
 
-  constructor(leaf: WorkspaceLeaf, plugin: BibcitePlugin) {
+  constructor(leaf: WorkspaceLeaf, plugin: DeepSitPlugin) {
     super(leaf);
     this.plugin = plugin;
     this._fileCollectionData = new Map()
@@ -79,7 +79,7 @@ export class ReferencesView extends ItemView {
       if (annotationsMode == 'modal') {
         const attachmentAnnotationsMap = await processAttachmentAnnotations(this.activeFileCollectionData, bibliographyMode);
         const attachmentAnnotations = Array.from(attachmentAnnotationsMap.values())
-        new MultiAnnotationsModal(this.app, attachmentAnnotations).open();  
+        new MultiAnnotationsModal(this.app, this.plugin, attachmentAnnotations).open();  
       }
       else if (annotationsMode == 'viewpane') {
         await this.renderAnnotations(bibliographyMode);
@@ -476,7 +476,7 @@ export class ReferencesView extends ItemView {
     const attachmentAnnotationsMap = await processAttachmentAnnotations(this.activeFileCollectionData, bibliographyMode);
     const attachmentAnnotations = Array.from(attachmentAnnotationsMap.values())
 
-    const multiAnnotations = new MultiAnnotationsModal(this.app, attachmentAnnotations);
+    const multiAnnotations = new MultiAnnotationsModal(this.app, this.plugin, attachmentAnnotations);
     const fragment = multiAnnotations.processContent();
 
     containerDiv.appendChild(fragment);
@@ -540,7 +540,7 @@ export class ReferencesView extends ItemView {
         annotationsIcon.setAttribute("title", "Annotations");
         setIcon(annotationsIcon, "book-open-text");
         annotationsIcon.onclick = (e) => {
-          new AnnotationsModal(this.app, annotationsData).open();
+          new AnnotationsModal(this.app, this.plugin, annotationsData).open();
         };
         
         citeKeyDomElement?.appendChild(annotationsIcon);
@@ -573,8 +573,9 @@ export class AnnotationsModal extends Modal {
   private _parentUri: string;
   private _annotations: object;
 
-  constructor(app: App, private annotationData: ItemAnnotationsData) {
+  constructor(app: App, private plugin:DeepSitPlugin, private annotationData: ItemAnnotationsData) {
     super(app);
+    this.plugin = plugin
     this._citekey = annotationData.reference.citekey;
     this._parentUri = annotationData.parentUri;
     this._annotations = annotationData.annotations;
@@ -639,7 +640,13 @@ export class AnnotationsModal extends Modal {
       annotationSpan.title = annotation['annotationComment'] //tooltip
 
       const highlightColour = `${annotation['annotationColor']}`.slice(1); //remove the initial '#' in the hex colour
-      annotationSpan.className = `highlight-${highlightColour}`;
+
+      if (this.plugin.settings.defaultAnnotationHighlight == 'background'){
+        annotationSpan.classList.add(`highlight-${highlightColour}`);
+      } else {
+        annotationSpan.classList.add(`highlight-sidemargin`);
+        annotationSpan.classList.add(`highlight-sidemargin-${highlightColour}`);
+      }
 
       const annotationUri = this._parentUri + `?annotation=${annotation['key']}`
       let linkButton = annotationDiv.createEl("a", {cls: "annotation-link-icon", title: "Open in Zotero"});
@@ -687,8 +694,9 @@ export class AnnotationsModal extends Modal {
 export class MultiAnnotationsModal extends Modal {
   private _data: ItemAnnotationsData[];
 
-  constructor(app: App, private annotationData: ItemAnnotationsData[]) {
+  constructor(app: App, private plugin:DeepSitPlugin, private annotationData: ItemAnnotationsData[]) {
     super(app);
+    this.plugin = plugin
     this._data = annotationData.filter((item:ItemAnnotationsData) => item.annotations.length); //only these that have annotations
   }
 
@@ -717,7 +725,7 @@ export class MultiAnnotationsModal extends Modal {
     containerDiv.classList.add('deepsit-annotations-div');
     
     for (const data of this._data) {
-      const modal = new AnnotationsModal(this.app, data);
+      const modal = new AnnotationsModal(this.app, this.plugin, data);
       const annotationFragment = modal.processContent();
       containerDiv.appendChild(annotationFragment)
     }
