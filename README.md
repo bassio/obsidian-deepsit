@@ -10,6 +10,25 @@ Deep Sit is an Obsidian plugin that allows you to easily cite and refer to the l
 - Zotero's Better BibTeX plugin. (https://retorque.re/zotero-better-bibtex/index.html)
 - Note: Zotero, with Better BibTeX installed, must be running while you are using this plugin.
 
+## Screenshots
+
+- Cite as you write
+
+![Citing](/screenshots/citing.png)
+
+- References 
+
+![References](/screenshots/references.png)
+
+- Annotations
+
+![Annotations](/screenshots/annotations.png)
+
+- Insert References Section
+
+![References Section](/screenshots/references_section.png)
+
+
 ## Installation
 
 ### Manual installation
@@ -67,23 +86,6 @@ This plugin's would fit optimally within your research workflow, if you operate 
 - Icons for quick-jump to the annotation in Zotero and for quick-copy the appropriately-referenced annotation to clipboard.
 - Annotations view also includes Zotero "area" pdf annotations viewed as in-line pictures.
 
-## Screenshots
-
-- Cite as you write
-
-![Citing](/screenshots/citing.png)
-
-- References 
-
-![References](/screenshots/references.png)
-
-- Bibliography mode
-
-![Bibliography](/screenshots/bibliography.png)
-
-- Multi-file Annotations view pane
-
-![Annotations](/screenshots/annotations.png)
 
 ## Usage
 
