@@ -162,6 +162,20 @@
         --highlight-gray: #DDDDDD; /* #aaaaaa */
     }
 
+    .deepsit-annotations-div.deepsit-annotations-div-theme-flexoki {
+        /* Flexoki is MIT Licensed (Copyright Steph Ango) https://www.stephango.com/flexoki */
+        --highlight-yellow: #F6E2A0;
+        --highlight-red: #FFCABB;
+        --highlight-green: #DDE2B2;
+        --highlight-blue: #C6DDE8;
+        --highlight-purple: #E2D9E9;
+        --highlight-magenta: #FCCFDA;
+        --highlight-orange: #FED3AF;
+        --highlight-gray: #E6E4D9;
+    }
+
+    }
+
     .deepsit-annotations-div .item-annotations-header {
         /* font-variant: var(--h6-variant); */
         letter-spacing: -0.015em;

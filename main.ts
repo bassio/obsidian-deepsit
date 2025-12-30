@@ -10,12 +10,15 @@ interface DeepSitPluginSettings {
 	defaultViewMode: string;
 	defaultAnnotationsMode: string;
 	defaultAnnotationHighlight: string;
+	annotationHighlightColourScheme: string;
+
 }
 
 const DEFAULT_SETTINGS:DeepSitPluginSettings = {
 	defaultViewMode: 'references',
 	defaultAnnotationsMode: 'viewpane',
-	defaultAnnotationHighlight: 'background'
+	defaultAnnotationHighlight: 'background',
+	annotationHighlightColourScheme: 'zotero'
 }
 
 
@@ -79,6 +82,23 @@ class DeepSitSettingTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 							})
 			});
+
+		const AnnotationHighlightColourSchemeDesc = `Annotation highlights colour scheme. Options include "zotero" (default) and "flexoki" colour schemes.`;
+
+		new Setting(containerEl)
+			.setName('Annotation highlights colour scheme')
+			.setDesc(`${AnnotationHighlightColourSchemeDesc}`)
+			.addDropdown((dropdown) => {
+				dropdown
+				.addOption('zotero', "Zotero")
+				.addOption('flexoki', "Flexoki")
+				.setValue(this.plugin.settings.annotationHighlightColourScheme)
+				.onChange(async (value) => {
+							this.plugin.settings.annotationHighlightColourScheme = value;
+							await this.plugin.saveSettings();
+							})
+			});
+
 
 	}
 	

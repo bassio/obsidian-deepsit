@@ -616,7 +616,17 @@ export class AnnotationsModal extends Modal {
     const fragment = document.createDocumentFragment();
 
     const containerDiv = fragment.createEl('div');
-    containerDiv.classList.add('deepsit-annotations-div');
+
+    if (this.plugin.settings.annotationHighlightColourScheme == 'zotero') {
+      containerDiv.classList.add('deepsit-annotations-div');
+    }
+    else if (this.plugin.settings.annotationHighlightColourScheme == 'flexoki') {
+      containerDiv.classList.add('deepsit-annotations-div');
+      containerDiv.classList.add('deepsit-annotations-div-theme-flexoki');
+    }
+    else {
+      containerDiv.classList.add('deepsit-annotations-div');    
+    }
     
     const contentFragment = this.processContent();
     
@@ -722,7 +732,18 @@ export class MultiAnnotationsModal extends Modal {
     const fragment = document.createDocumentFragment();
 
     const containerDiv = fragment.createEl('div');
-    containerDiv.classList.add('deepsit-annotations-div');
+
+    if (this.plugin.settings.annotationHighlightColourScheme == 'zotero') {
+      containerDiv.classList.add('deepsit-annotations-div');
+    }
+    else if (this.plugin.settings.annotationHighlightColourScheme == 'flexoki') {
+      containerDiv.classList.add('deepsit-annotations-div');
+      containerDiv.classList.add('deepsit-annotations-div-theme-flexoki');
+    }
+    else {
+      containerDiv.classList.add('deepsit-annotations-div');    
+    }
+    
     
     for (const data of this._data) {
       const modal = new AnnotationsModal(this.app, this.plugin, data);
