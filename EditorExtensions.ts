@@ -20,6 +20,7 @@ import { FrontMatterBibliographyString } from 'FrontMatter';
 import { editorLivePreviewField, getFrontMatterInfo, FrontMatterInfo, parseYaml } from 'obsidian';
 import { citationsInText } from 'ReferenceProcessing';
 import { bibliography } from 'ZoteroFunctions';
+import DeepSitPlugin from 'main';
 
 interface ReferencesDisplayData {
     citeKeys:string[];
@@ -145,10 +146,14 @@ export const ReferencesStateField = StateField.define<DecorationSet>({
 
 
 
-class ReferencesRendererPlugin implements PluginValue {
+export class ReferencesRendererPlugin implements PluginValue {
+  private readonly view: EditorView;
+  private plugin: DeepSitPlugin;
 
-  constructor(readonly view: EditorView) {
+  constructor(view: EditorView, plugin: DeepSitPlugin) {
     //const stateFieldValue = view.state.field(ReferencesStateField);
+    this.view = view
+    this.plugin = plugin;
     this.initialDispatch(view);
   }
 
@@ -190,7 +195,11 @@ class ReferencesRendererPlugin implements PluginValue {
 
     const bib:string = frontmatterObject[FrontMatterBibliographyString];
     const library = bib.split('/', 1)[0];
-    const style:string = frontmatterObject["csl"];
+    let style:string = frontmatterObject["csl"];
+    
+    if (!style){
+      style = this.plugin.settings.defaultCSLStyle;
+    }
 
     bibliography(citeKeys, library, style, 'text')
     .then(
@@ -261,7 +270,11 @@ class ReferencesRendererPlugin implements PluginValue {
 
         const bib:string = frontmatterObject[FrontMatterBibliographyString];
         const library = bib.split('/', 1)[0];
-        const style:string = frontmatterObject["csl"];
+        let style:string = frontmatterObject["csl"];
+
+        if (!style){
+          style = this.plugin.settings.defaultCSLStyle;
+        }
 
         const references = await bibliography(citeKeys, library, style, 'text')
         

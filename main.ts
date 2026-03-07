@@ -1,24 +1,29 @@
+import {
+  ViewPlugin,
+} from '@codemirror/view';
+
 import { App, Plugin, PluginSettingTab, requireApiVersion, Setting, TFile, WorkspaceLeaf } from 'obsidian';
 
 
 import { CitationSuggest } from "CitationSuggest";
 import { ReferencesView, ReferencesViewType } from 'ReferencesView';
 import { FrontMatterBibliographyString } from 'FrontMatter';
-import {ReferencesRendererViewPlugin, ReferencesStateField} from 'EditorExtensions'
+import {ReferencesStateField, ReferencesRendererPlugin, ReferencesRendererViewPlugin} from 'EditorExtensions'
 
 interface DeepSitPluginSettings {
 	defaultViewMode: string;
 	defaultAnnotationsMode: string;
 	defaultAnnotationHighlight: string;
 	annotationHighlightColourScheme: string;
-
+	defaultCSLStyle: string;
 }
 
 const DEFAULT_SETTINGS:DeepSitPluginSettings = {
 	defaultViewMode: 'references',
 	defaultAnnotationsMode: 'viewpane',
 	defaultAnnotationHighlight: 'background',
-	annotationHighlightColourScheme: 'zotero'
+	annotationHighlightColourScheme: 'zotero',
+	defaultCSLStyle: 'vancouver',
 }
 
 
@@ -97,6 +102,15 @@ class DeepSitSettingTab extends PluginSettingTab {
 							this.plugin.settings.annotationHighlightColourScheme = value;
 							await this.plugin.saveSettings();
 							})
+			});
+
+		const DefaultCSLStyleDesc = `Default CSL style for to formatting bibliographies inside note text.`;
+
+		new Setting(containerEl)
+			.setName('Default CSL style')
+			.setDesc(`${DefaultCSLStyleDesc}`)
+			.addText((value) => {
+				value.setValue(this.plugin.settings.defaultCSLStyle)
 			});
 
 
@@ -196,7 +210,11 @@ export default class DeepSitPlugin extends Plugin {
 						
 		}));
 
-		this.registerEditorExtension([ReferencesStateField, ReferencesRendererViewPlugin]);
+		
+		this.registerEditorExtension(ReferencesStateField)
+		this.registerEditorExtension(
+			ViewPlugin.define((view) => new ReferencesRendererPlugin(view, this))
+		);
 		
 		this.registerMarkdownPostProcessor(async (element, context) => {
 			
@@ -217,7 +235,7 @@ export default class DeepSitPlugin extends Plugin {
 							const library = context.frontmatter[FrontMatterBibliographyString].split('/', 1)[0];
 							let style = context.frontmatter['csl'];
 							if (!style){
-								style = "vancouver";
+								style = this.settings.defaultCSLStyle;
 							}
 							const biblio:string = await view.generateBibliography(refs.citations, library, style, 'text')
 							element.innerText = biblio;
