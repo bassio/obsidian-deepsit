@@ -229,11 +229,71 @@ export class ReferencesRendererPlugin implements PluginValue {
     )
 
   }
+  async update_async(update: ViewUpdate) {
+    const doc = update.state.doc;
+
+    const currentDocText = doc.toString();
+
+    const cursor = new SearchCursor(doc, `::: {#refs}\n:::\n`, 0);
+
+    const match = cursor.next();
+
+    let refIndex:number;
+
+    if (match.value.from == 0 || match.value.to == 0 || match.done == true){
+      refIndex = -1;
+    } else {
+      //const refIndex =  currentDocText.indexOf(`::: {#refs}\n:::\n`);
+      refIndex =  match.value.from;
+    }
+
+    
+    if (refIndex === -1){
+      //hack using setTimeout avoids the "Calls to EditorView.update are not allowed while an update is in progress"
+      setTimeout(() => {
+        update.view.dispatch({effects: asyncReferencesDisplayDataEffect.of(EmptyReferencesDisplayData),});
+      }, 50);
+      
+      return
+    }
+
+    const fmInfo:FrontMatterInfo = getFrontMatterInfo(currentDocText);
+    const currentDocTextNoFrontMatter = doc.sliceString(fmInfo.contentStart);
+
+    const citeKeys:string[] = citationsInText(currentDocTextNoFrontMatter);
+
+    const frontmatterObject = parseYaml(fmInfo.frontmatter);
+
+    const bib:string = frontmatterObject[FrontMatterBibliographyString];
+    const library = bib.split('/', 1)[0];
+    let style:string = frontmatterObject["csl"];
+
+    if (!style){
+      style = this.plugin.settings.defaultCSLStyle;
+    }
+
+    const references = await bibliography(citeKeys, library, style, 'text')
+    
+    const refData:ReferencesDisplayData = {
+        citeKeys: citeKeys,
+        library: library,
+        style: style,
+        contentType: 'text',
+        references: references,
+        posFrom: refIndex,
+        posTo: refIndex+15
+    };
+
+    update.view.dispatch({
+        effects: asyncReferencesDisplayDataEffect.of(refData),
+    });
+
+  }
 
   async update(update: ViewUpdate) {
 
     if (update.docChanged) {
-
+      
         const doc = update.state.doc;
 
         const currentDocText = doc.toString();

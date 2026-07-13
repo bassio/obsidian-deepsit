@@ -111,6 +111,8 @@ export async function exportCollection(collectionId:string, libraryId:string, bi
 	const url_path = `/better-bibtex/collection?/${libraryId}/${collectionId}.${bibFormat}`;
 
     const url = `http://127.0.0.1:23119/better-bibtex/collection?/${libraryId}/${collectionId}.${bibFormat}&exportNotes=true`;
+    
+    console.log(url)
 
 	const options = {
         url: url,
