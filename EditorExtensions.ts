@@ -222,7 +222,7 @@ export class ReferencesRendererPlugin implements PluginValue {
       function(error) {
         console.error(error);
         //hack using setTimeout avoids the "Calls to EditorView.update are not allowed while an update is in progress"
-        setTimeout(() => {
+        window.setTimeout(() => {
           view.dispatch({effects: asyncReferencesDisplayDataEffect.of(EmptyReferencesDisplayData),});
         }, 50);
       }
@@ -250,7 +250,7 @@ export class ReferencesRendererPlugin implements PluginValue {
     
     if (refIndex === -1){
       //hack using setTimeout avoids the "Calls to EditorView.update are not allowed while an update is in progress"
-      setTimeout(() => {
+      window.setTimeout(() => {
         update.view.dispatch({effects: asyncReferencesDisplayDataEffect.of(EmptyReferencesDisplayData),});
       }, 50);
       
@@ -314,7 +314,7 @@ export class ReferencesRendererPlugin implements PluginValue {
         
         if (refIndex === -1){
           //hack using setTimeout avoids the "Calls to EditorView.update are not allowed while an update is in progress"
-          setTimeout(() => {
+          window.setTimeout(() => {
             update.view.dispatch({effects: asyncReferencesDisplayDataEffect.of(EmptyReferencesDisplayData),});
           }, 50);
           
