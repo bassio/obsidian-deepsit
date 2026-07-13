@@ -65,12 +65,12 @@ class ReferencesWidget extends WidgetType {
   toDOM(view) {
     
     if (this.data == EmptyReferencesDisplayData) {
-        const div = document.createElement("div");
+        const div = activeDocument.createElement("div");
         div.className = "deepsit-references-widget";
         div.textContent = `::: {#refs}\n:::`;
         return div;
     } else {
-        const div = document.createElement("div");
+        const div = activeDocument.createElement("div");
         div.className = "deepsit-references-widget";
         if (this.data.contentType == 'text'){
           div.textContent = this.data.references;

@@ -126,7 +126,7 @@ export class CitationSuggest extends EditorSuggest<Suggestion> {
 
 	renderSuggestion(suggestion: Suggestion, el: HTMLElement): void {
 		el.setText('@' + suggestion['id']);
-		el.appendChild(document.createElement('br'));
+		el.appendChild(activeDocument.createElement('br'));
 		el.appendText(suggestion['title']);
 	}
 

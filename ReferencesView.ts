@@ -371,7 +371,7 @@ export class ReferencesView extends ItemView {
       return
     }
 
-    const containerDiv = document.createElement('div');
+    const containerDiv = activeDocument.createElement('div');
     containerDiv.classList.add('deepsit-references-div');
     
     let itemsDiv:string = ``;
@@ -427,7 +427,7 @@ export class ReferencesView extends ItemView {
       return
     }
 
-    const containerDiv = document.createElement('div');
+    const containerDiv = activeDocument.createElement('div');
     containerDiv.classList.add('deepsit-references-div');
     
     let itemsDiv:string = ``;
@@ -470,7 +470,7 @@ export class ReferencesView extends ItemView {
 
   async renderAnnotations(bibliographyMode:boolean) {
 
-    const containerDiv = document.createElement('div');
+    const containerDiv = activeDocument.createElement('div');
     containerDiv.classList.add('annotations-leaf-div');
 
     const attachmentAnnotationsMap = await processAttachmentAnnotations(this.activeFileCollectionData, bibliographyMode);
@@ -519,7 +519,7 @@ export class ReferencesView extends ItemView {
 
   async renderAttachments(collectionData:CollectionData) {
 
-    const containerDiv = document.createElement('div');
+    const containerDiv = activeDocument.createElement('div');
     containerDiv.classList.add('deepsit-references-div');
 
     const itemAnnotations:ItemAnnotationsMap = await this.processAttachmentsAnnotations(collectionData);
@@ -535,7 +535,7 @@ export class ReferencesView extends ItemView {
 
         const citeKeyDomElement = this.contentEl.querySelector(`.reference-div .reference-citekey[data-citekey='${annotationsData.reference.citekey}']`);
 
-        let annotationsIcon = document.createElement("span");
+        let annotationsIcon = activeDocument.createElement("span");
         annotationsIcon.addClass("annotations-icon");
         annotationsIcon.setAttribute("title", "Annotations");
         setIcon(annotationsIcon, "book-open-text");
@@ -598,7 +598,7 @@ export class AnnotationsModal extends Modal {
   processContent() {
     const citekey = this._citekey;
     const itemData = this._data;
-    const fragment = document.createDocumentFragment();
+    const fragment = activeDocument.createDocumentFragment();
 
     fragment.createEl("div", { text: `Annotations of @${citekey}`, cls: 'item-annotations-header' });
     fragment.createEl("div", { text: `${itemData.title}`, cls: 'item-annotations-header-item-title'  });
@@ -613,7 +613,7 @@ export class AnnotationsModal extends Modal {
 
   renderContent() {
     
-    const fragment = document.createDocumentFragment();
+    const fragment = activeDocument.createDocumentFragment();
 
     const containerDiv = fragment.createEl('div');
 
@@ -729,7 +729,7 @@ export class MultiAnnotationsModal extends Modal {
   }
   
   processContent() {
-    const fragment = document.createDocumentFragment();
+    const fragment = activeDocument.createDocumentFragment();
 
     const containerDiv = fragment.createEl('div');
 
