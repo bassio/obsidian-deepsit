@@ -1,4 +1,4 @@
-import {requestUrl} from 'obsidian';
+import {requestUrl, RequestUrlParam} from 'obsidian';
 
 const defaultHeaders = {
     'Content-Type': 'application/json',
@@ -114,24 +114,28 @@ export async function exportCollection(collectionId:string, libraryId:string, bi
     
     console.log(url)
 
-	const options = {
+	const options: RequestUrlParam = {
         url: url,
-		hostname: 'localhost',
-		port: 23119,
-		path: url_path,
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json',
+            'Zotero-Allowed-Request': '1'
 			},
 	};
 
     try { 
         
-        const responseStr = await makeHttpRequest(options, '')
+        const response = await requestUrl(options)
 
-        const responseJson = JSON.parse(responseStr);
-
-        return responseJson;
+        if (typeof response.text === 'string') {
+            try {
+                return JSON.parse(response.text);
+            } catch {
+                return response.text; // Return the raw text if it's not json (e.g. a BibTeX file string)
+            }
+        }
+        
+        return response.json;
 
     }
     catch (error) {
